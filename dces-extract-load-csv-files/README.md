@@ -1,14 +1,69 @@
 # dces-extract-load-csv-files
 
-This is an Ubuntu based application which will run as a Docker container.
+This is an Ubuntu based application which will run as a Docker container. The application gets csv files from an s3 bucket, processes and adds batch id to each csv record, and loads into Postgres DB with tables that contain the batch id in its name.
 
-This application gets csv files from an s3 bucket, processes and adds batch id to each csv record, and loads into Postgres DB.
+### Application Set up
+
+Clone Repository
+
+```sh
+git clone git@github.com:ministryofjustice/laa-dces-data-migration.git
+
+cd laa-dces-data-migration
+```
+
+### To build the container
+
+In the directory where the Dockerfile is located, run the following 
+```
+docker build -t my_app_image .
+```
+
+### Assumptions and pre-requisites
+This application runs on Docker as a container and has some assumptions/pre-requisites:
+- you have AWS CLI is installed and you have valid user credentials (**dces-admin-user-dev**) to access the s3 bucket => application needs to mount the 'credentials' file located in /.aws to the container
+-  BATCH_ID is mandatory. This value should identify the entire dataload instance
+-  S3_PREFIX is mandatory. This value will identify the s3 directory (prefix) that you are loading files from
+-  FILE_PATTERN is mandatory. This value is used to match files located in the S3_PREFIX. This version assumes the FILE_PATTERN starts at the beginning of the file name and that the file ends with .csv
+-  PGUSER is mandatory. This value is the user that can access the postgres database. You must retrieve this value from Kubernetes secrets.
+-  The ***secrets.env*** is unencrypted using **git-crypt unlock**
+
+### To run the container, navigate to the directory where the Dockerfile is located
+
+```
+docker run -it --env-file ../secrets.env \
+  -v <USER_HOME>/.aws:/root/.aws \
+  -e BATCH_ID=<BATCH_ID> \
+  -e PGUSER=<PGUSER> \
+  -e S3_PREFIX=<PREFIX> \
+  -e FILE_PATTERN=<FILE_PATTERN> \
+  <image_name>
+```
+
+***An example***
+
+```
+docker run -it --env-file ../secrets.env \
+  -v ~/.aws:/root/.aws \
+  -e BATCH_ID=20241507 \
+  -e PGUSER=cp1234 \
+  -e S3_PREFIX=DRC/ \
+  -e FILE_PATTERN=ccmt \
+  my_app_image
+```
+
+### During container run
+
+You will be prompted for the database password which you should enter by retrieving from Kubernetes secrets
+
+### After container runs
+- Check any error messages.
+- Check the postgres database for the tables that you think should have been created
 
 
+### To decrypt the secrets.env
 
-### Decrypting docker-compose.override.yml
-
-The `docker-compose.override.yml` is encrypted using [git-crypt](https://github.com/AGWA/git-crypt).
+The `secrets.env` is encrypted using [git-crypt](https://github.com/AGWA/git-crypt).
 
 To run the app locally you need to be able to decrypt this file.
 
@@ -26,74 +81,6 @@ Once you have done this, a team member who already has access can add your key b
 Once this has been merged you can decrypt your local copy of the repository by running `git-crypt unlock`.
 
 \*`USER_ID` can be your key ID, a full fingerprint, an email address, or anything else that uniquely identifies a public key to GPG (see "HOW TO SPECIFY A USER ID" in the gpg man page).
-The apps should then startup cleanly if you run
-
-### Application Set up
-
-Clone Repository
-
-```sh
-git clone git@github.com:ministryofjustice/laa-dces-report-service.git
-
-cd dces-report-service
-```
-
-Make sure all tests are passed by running following ‘gradle’ Command
-
-```sh
-./gradlew clean test
-```
-
-You will need to build the artifacts for the source code, using `gradle`.
-
-```sh
-./gradlew clean build
-```
-
-```sh
-docker-compose build
-docker-compose up
-```
-
-laa-dces-report-service application will be running on http://localhost:8089
-
-### How to generate reports on demand
-
-To run reports manually, it is required to be able to access the pods from local machine. If you need help read section #How-to-access-the-pods for help.
-
-If it is required to trigger the report manually follow these simple instructions:
-
-1. get access to the container where the app is running
-2. Use the command to launch the corresponding report
-3. Make sure to specify the start and end date in the correct format (dd.MM.yyyy)
-
-There are 2 ways of doing this, you can either use the script provided for ease or type the full CURL command.
-
-Check the following examples:
-
-#### For contributions:
-
-```sh
-./contributionsReportAdHoc.sh 01.01.2021 26.01.2021
-```
-
-or
-
-```shell
-curl -G localhost:8089/api/internal/v1/dces/report/contributions/01.01.2021/26.01.2021
-```
-
-#### For FDCs:
-
-```sh
-./fdcReportAdHoc.sh 01.01.2021 26.01.2021
-```
-
-or
-
-```sh
-curl -G localhost:8089/api/internal/v1/dces/report/fdc/01.01.2021/26.01.2021
-```
 
 ### How to access the pods:
 
@@ -112,10 +99,8 @@ kubectl get pods -n {nameSpace}
 
 Possible values for `nameSpace` are:
 
-- laa-dces-report-service-dev
-- laa-dces-report-service-uat
-- laa-dces-report-service-staging
-- laa-dces-report-service-prod
+- laa-dces-data-migration-dev
+
 
 Check response from command below, you will need that for the following step
 
@@ -137,16 +122,16 @@ kubectl exec -it {podName} -n {nameSpace} -- sh
 Example:
 
 ```sh
-kubectl get pods -n laa-dces-report-service-readme
+kubectl get pods -n laa-dces-data-migration-dev-readme
 ```
 
 Output should be similar to this:
 
     NAME                                  READY   STATUS    RESTARTS   AGE
-    laa-dces-report-service-00000-xxxxx   1/1     Running   0          18m
+    laa-dces-data-migration-dev-00000-xxxxx   1/1     Running   0          18m
 
 ```shell
-kubectl exec -it laa-dces-report-service-00000-xxxxx -n laa-dces-report-service-readme -- sh
+kubectl exec -it laa-dces-data-migration-00000-xxxxx -n laa-dces-data-migration-readme -- sh
 ```
 
 That should give you access to the pods terminal.
