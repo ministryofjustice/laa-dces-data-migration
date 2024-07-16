@@ -70,13 +70,22 @@ mkdir -p "$PROCESSED_DIR"
 # Download files from S3
 aws s3 cp s3://$S3_BUCKET/$S3_PREFIX $CSV_DIR --recursive --exclude "*" --include "$FILE_PATTERN*.csv" --profile=dces-admin-user-dev
 
-
+# Function to strip BOM from a file
+strip_bom() {
+    local file="$1"
+    local tmp_file="${file}.nobom"
+    awk 'NR==1{sub(/^\xef\xbb\xbf/,"")}{print}' "$file" > "$tmp_file"
+    mv "$tmp_file" "$file"
+}
 
 # Initialize SQL file (create a new file or truncate the existing one)
 > "$SQL_FILE"
 
 # Loop through CSV files in the directory
 for CSV_FILE in "$CSV_DIR"$FILE_PATTERN*.csv; do
+
+# Strip BOM from the CSV file
+  strip_bom "$CSV_FILE"
 
   # Extract base table name from CSV file name
   BASE_TABLE_NAME=$(basename "$CSV_FILE" | sed 's/^file1_//' | sed 's/\.csv$//')
