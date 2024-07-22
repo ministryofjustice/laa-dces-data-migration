@@ -78,6 +78,12 @@ strip_bom() {
     mv "$tmp_file" "$file"
 }
 
+# Function to remove carriage return characters
+remove_carriage_returns() {
+    local file="$1"
+    sed -i 's/\r//g' "$file"
+}
+
 # Initialize SQL file (create a new file or truncate the existing one)
 > "$SQL_FILE"
 
@@ -86,6 +92,9 @@ for CSV_FILE in "$CSV_DIR"$FILE_PATTERN*.csv; do
 
 # Strip BOM from the CSV file
   strip_bom "$CSV_FILE"
+
+# Remove carriage return characters
+  remove_carriage_returns "$CSV_FILE"
 
   # Extract base table name from CSV file name
   BASE_TABLE_NAME=$(basename "$CSV_FILE" | sed 's/^file1_//' | sed 's/\.csv$//')
@@ -102,11 +111,12 @@ for CSV_FILE in "$CSV_DIR"$FILE_PATTERN*.csv; do
   HEADER=$(echo "$HEADER" | tr '[:upper:]' '[:lower:]' | sed 's/ /_/g')
 
 
-# Add batch_id column to the beginning of the header
-  HEADER="batch_id,${HEADER}"
+  # Add batch_id column to the beginning of the header and json_footer column at the end
+  HEADER="batch_id,${HEADER},json_footer"
 
   # Create SQL column definitions
   COLUMNS=$(echo "$HEADER" | awk -F, '{ for(i=1; i<=NF; i++) print $i " text," }' | sed '$ s/,$//')
+
 
   # Create SQL statements
   DROP_TABLE_SQL="drop table if exists $TABLE_NAME;\n"
@@ -116,9 +126,20 @@ for CSV_FILE in "$CSV_DIR"$FILE_PATTERN*.csv; do
   TMP_CSV_FILE="$TO_BE_PROCESSED_DIR${BASE_TABLE_NAME}_${BATCH_ID}_with_batch_id.csv"
   {
     echo "$HEADER"
-    awk -v batch_id="$BATCH_ID" -F, 'NR > 1 { print batch_id "," $0 }' "$CSV_FILE"
+    #awk -v batch_id="$BATCH_ID" -F, 'NR > 1 { print batch_id "," $0 }' "$CSV_FILE"
+    awk -v batch_id="$BATCH_ID" -F, 'NR > 1 { print batch_id "," $0 ",\"\""}' "$CSV_FILE" | head -n -1
   } > "$TMP_CSV_FILE"
 
+# Extract the footer
+    FOOTER=$(tail -n 1 "$CSV_FILE")
+    FOOTER_JSON=$(echo "$FOOTER" | awk -F, '{printf "{\"createdate\":\"%s\",\"weeknum\":\"%s\",\"daynum\":\"%s\",\"rowcount\":\"%s\",\"deltastartdate\":\"%s\",\"deltaenddate\":\"%s\"}", $1, $2, $3, $4, $5, $6}')
+
+# Get the number of columns (including the new ones for batch_id and json_footer)
+    NUM_COLUMNS=$(echo "$HEADER" | awk -F, '{print NF}')
+
+    # Create an empty row with just the footer JSON in the last column
+    EMPTY_COLUMNS=$(for i in $(seq 1 $((NUM_COLUMNS-1))); do printf ","; done)
+    echo "$BATCH_ID$EMPTY_COLUMNS\"$FOOTER_JSON\"" >> "$TMP_CSV_FILE"
 
 
 
