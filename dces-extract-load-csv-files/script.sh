@@ -133,7 +133,7 @@ for CSV_FILE in "$CSV_DIR"$FILE_PATTERN*.csv; do
 
         # Add an insert statement for the logging table
         #echo "insert into $LOGGING_TABLE (filename, batchid, tablename, createdate, weeknum, daynum, rowcount, deltastartdate, deltaenddate) values ('$CSV_FILE', '$BATCH_ID', '$TABLE_NAME', '$FOOTER_JSON'::jsonb->>'createdate', '$FOOTER_JSON'::jsonb->>'weeknum', '$FOOTER_JSON'::jsonb->>'daynum', '$FOOTER_JSON'::jsonb->>'rowcount', '$FOOTER_JSON'::jsonb->>'deltastartdate', '$FOOTER_JSON'::jsonb->>'deltaenddate');"
-        echo "insert into marston.dataload_file_audit (filename, batchid, tablename, json_footer) values ('$S3_PREFIX-$CSV_FILE', '$BATCH_ID', '$TABLE_NAME', '$FOOTER_JSON'::jsonb);"
+        echo "insert into $FILELOGGINGTABLE (filename, batchid, tablename, json_footer) values ('$S3_PREFIX-$CSV_FILE', '$BATCH_ID', '$TABLE_NAME', '$FOOTER_JSON'::jsonb);"
      } >> "$SQL_FILE"
 
 done
