@@ -138,11 +138,34 @@ for CSV_FILE in "$CSV_DIR"$FILE_PATTERN*.csv; do
         echo -e "$CREATE_TABLE_SQL"
         echo -n $BS
         echo -e $COPY_SQL
+    }
+
+    # Extract the row count from the footer
+        FOOTER_ROWCOUNT=$(echo "$FOOTER_JSON" | jq -r '.rowcount')
+
+        # Add a check for the row count after creating the table and copying the data
+        {
+            echo -e "DO \$\$"
+            echo -e "DECLARE"
+            echo -e "    v_rowcount INTEGER;"
+            echo -e "BEGIN"
+            echo -e "    -- Check the row count"
+            echo -e "    SELECT COUNT(batch_id) INTO v_rowcount FROM $TABLE_NAME;"
+            echo -e "    -- Compare with the footer row count"
+            echo -e "    IF v_rowcount = $FOOTER_ROWCOUNT THEN"
+            echo -e "        -- Insert into the logging table"
+            echo -e "        INSERT INTO $LOGGING_TABLE (filename, batchid, tablename, comment, json_footer) VALUES ('$S3_PREFIX-$CSV_FILE', '$BATCH_ID', '$TABLE_NAME', '$COMMENT', '$FOOTER_JSON'::jsonb);"
+            echo -e "    ELSE"
+            echo -e "        -- Log an error and skip the insertion into the logging table"
+            echo -e "        RAISE NOTICE 'Row count mismatch for table $TABLE_NAME. Expected: $FOOTER_ROWCOUNT, Found: ' || v_rowcount;"
+            echo -e "    END IF;"
+            echo -e "END \$\$;"
+        } >> "$SQL_FILE"
 
         # Add an insert statement for the logging table
         #echo "insert into $LOGGING_TABLE (filename, batchid, tablename, createdate, weeknum, daynum, rowcount, deltastartdate, deltaenddate) values ('$CSV_FILE', '$BATCH_ID', '$TABLE_NAME', '$FOOTER_JSON'::jsonb->>'createdate', '$FOOTER_JSON'::jsonb->>'weeknum', '$FOOTER_JSON'::jsonb->>'daynum', '$FOOTER_JSON'::jsonb->>'rowcount', '$FOOTER_JSON'::jsonb->>'deltastartdate', '$FOOTER_JSON'::jsonb->>'deltaenddate');"
-        echo "insert into $FILELOGGINGTABLE (filename, batchid, tablename, comment, json_footer) values ('$S3_PREFIX-$CSV_FILE', '$BATCH_ID', '$TABLE_NAME', '$COMMENT', '$FOOTER_JSON'::jsonb);"
-     } >> "$SQL_FILE"
+        #echo "insert into $FILELOGGINGTABLE (filename, batchid, tablename, comment, json_footer) values ('$S3_PREFIX-$CSV_FILE', '$BATCH_ID', '$TABLE_NAME', '$COMMENT', '$FOOTER_JSON'::jsonb);"
+     #} >> "$SQL_FILE"
 
 done
 
