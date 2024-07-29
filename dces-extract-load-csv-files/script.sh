@@ -138,10 +138,10 @@ for CSV_FILE in "$CSV_DIR"$FILE_PATTERN*.csv; do
         echo -e "$CREATE_TABLE_SQL"
         echo -n $BS
         echo -e $COPY_SQL
-    }
+    } >> "$SQL_FILE"
 
     # Extract the row count from the footer
-        FOOTER_ROWCOUNT=$(echo "$FOOTER_JSON" | jq -r '.rowcount')
+        FOOTER_ROWCOUNT=$(echo "$FOOTER_JSON" | awk -F'"rowcount": "' '{print $2}' | awk -F'"' '{print $1}')
 
         # Add a check for the row count after creating the table and copying the data
         {
@@ -154,10 +154,10 @@ for CSV_FILE in "$CSV_DIR"$FILE_PATTERN*.csv; do
             echo -e "    -- Compare with the footer row count"
             echo -e "    IF v_rowcount = $FOOTER_ROWCOUNT THEN"
             echo -e "        -- Insert into the logging table"
-            echo -e "        INSERT INTO $LOGGING_TABLE (filename, batchid, tablename, comment, json_footer) VALUES ('$S3_PREFIX-$CSV_FILE', '$BATCH_ID', '$TABLE_NAME', '$COMMENT', '$FOOTER_JSON'::jsonb);"
+            echo -e "        INSERT INTO $FILELOGGINGTABLE (filename, batchid, tablename, comment, json_footer) VALUES ('$S3_PREFIX-$CSV_FILE', '$BATCH_ID', '$TABLE_NAME', '$COMMENT', '$FOOTER_JSON'::jsonb);"
             echo -e "    ELSE"
             echo -e "        -- Log an error and skip the insertion into the logging table"
-            echo -e "        RAISE NOTICE 'Row count mismatch for table $TABLE_NAME. Expected: $FOOTER_ROWCOUNT, Found: ' || v_rowcount;"
+            echo -e "        RAISE NOTICE 'Row count mismatch for table $TABLE_NAME. Expected: %, Found: %', $FOOTER_ROWCOUNT, v_rowcount;"
             echo -e "    END IF;"
             echo -e "END \$\$;"
         } >> "$SQL_FILE"
