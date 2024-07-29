@@ -134,10 +134,19 @@ for CSV_FILE in "$CSV_DIR"$FILE_PATTERN*.csv; do
 
     # Write SQL statements to the SQL file
     {
-        echo -e "$DROP_TABLE_SQL"
-        echo -e "$CREATE_TABLE_SQL"
+        echo -e "DO \$\$ BEGIN"
+        echo -e "    RAISE NOTICE 'Dropping table: $TABLE_NAME';"
+        echo -e "    $DROP_TABLE_SQL"
+        echo -e "END \$\$;"
+        echo -e "DO \$\$ BEGIN"
+        echo -e "    RAISE NOTICE 'Creating table: $TABLE_NAME';"
+        echo -e "    $CREATE_TABLE_SQL"
+        echo -e "END \$\$;"
+        echo -e "DO \$\$ BEGIN"
+        echo -e "RAISE NOTICE 'Copying data into table: $TABLE_NAME';"
         echo -n $BS
         echo -e $COPY_SQL
+        echo -e "END \$\$;"
     } >> "$SQL_FILE"
 
     # Extract the row count from the footer
@@ -149,15 +158,16 @@ for CSV_FILE in "$CSV_DIR"$FILE_PATTERN*.csv; do
             echo -e "DECLARE"
             echo -e "    v_rowcount INTEGER;"
             echo -e "BEGIN"
+            echo -e "    RAISE NOTICE 'Checking copied row count with footer...';"
             echo -e "    -- Check the row count"
             echo -e "    SELECT COUNT(batch_id) INTO v_rowcount FROM $TABLE_NAME;"
             echo -e "    -- Compare with the footer row count"
             echo -e "    IF v_rowcount = $FOOTER_ROWCOUNT THEN"
-            echo -e "        -- Insert into the logging table"
+            echo -e "        RAISE NOTICE 'Rowcount match: create entry in file_audit_table';"
             echo -e "        INSERT INTO $FILELOGGINGTABLE (filename, batchid, tablename, comment, json_footer) VALUES ('$S3_PREFIX-$CSV_FILE', '$BATCH_ID', '$TABLE_NAME', '$COMMENT', '$FOOTER_JSON'::jsonb);"
             echo -e "    ELSE"
-            echo -e "        -- Log an error and skip the insertion into the logging table"
-            echo -e "        RAISE NOTICE 'Row count mismatch for table $TABLE_NAME. Expected: %, Found: %', $FOOTER_ROWCOUNT, v_rowcount;"
+            echo -e "        $DROP_TABLE_SQL"
+            echo -e "        RAISE NOTICE 'Deleting $TABLE_NAME - Row count mismatch:=> Expected: %, Found: %', $FOOTER_ROWCOUNT, v_rowcount;"
             echo -e "    END IF;"
             echo -e "END \$\$;"
         } >> "$SQL_FILE"
