@@ -55,7 +55,7 @@ mkdir -p "$TO_BE_PROCESSED_DIR"
 mkdir -p "$PROCESSED_DIR"
 
 # Download files from S3
-aws s3 cp s3://$S3_BUCKET/$S3_PREFIX $CSV_DIR --recursive --exclude "*" --include "$FILE_PATTERN*.csv" --profile=dces-admin-user-dev
+aws s3 cp s3://$S3_BUCKET/$S3_PREFIX $CSV_DIR --recursive --exclude "*" --include "$FILE_PATTERN*.csv" --profile=$DCES_ADMIN_USER
 
 # Function to strip BOM from a file
 strip_bom() {
@@ -188,8 +188,7 @@ if [ $? -eq 0 ]; then
   # Move processed files to the S3 processed directory
   for CSV_FILE in "$CSV_DIR"$FILE_PATTERN*.csv; do
     BASE_FILE_NAME=$(basename "$CSV_FILE")
- #   aws s3 cp s3://$S3_BUCKET/$S3_PREFIX"$BASE_FILE_NAME" s3://$S3_BUCKET/LAA/$S3_PREFIX"processed/" --profile=dces-admin-user-dev
- #   aws s3api delete-object --bucket $S3_BUCKET --key LAA/data/"$BASE_FILE_NAME" --profile=dces-admin-user-dev
+
     echo "$BASE_FILE_NAME" potentially processed - pls verify table in database
   done
 else
