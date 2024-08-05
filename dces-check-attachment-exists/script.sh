@@ -49,7 +49,7 @@ update_db_record() {
 check_s3_file() {
     local file_path=$1
     echo "Checking if file exists in S3 at path s3://$S3_BUCKET/$S3_PREFIX$file_path" >&2
-    aws s3 ls "s3://$S3_BUCKET/$S3_PREFIX$file_path" --recursive --profile=dces-admin-user-dev >/dev/null 2>&1
+    aws s3 ls "s3://$S3_BUCKET/$S3_PREFIX$file_path" --recursive --profile=$DCES_ADMIN_USER >/dev/null 2>&1
     return $?
 }
 
