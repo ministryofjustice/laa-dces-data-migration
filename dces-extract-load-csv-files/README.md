@@ -16,7 +16,7 @@ cd laa-dces-data-migration
 
 In the directory where the Dockerfile is located, run the following 
 ```
-docker build -t my_app_image .
+docker build -t <image_name> .
 ```
 
 ### Assumptions and pre-requisites
