@@ -90,7 +90,7 @@ while : ; do
             echo "File exists in S3." >&2
         else
             file_exists="false"
-            echo "File does not exist in S3." >&2
+            echo "File does not exist in S3.." >&2
         fi
 
         # Update PostgreSQL record
