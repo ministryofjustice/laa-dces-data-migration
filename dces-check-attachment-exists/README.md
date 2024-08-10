@@ -35,6 +35,7 @@ docker run -it --env-file ../secrets.env \
   -v <USER_HOME>/.aws:/root/.aws \
   -e BATCH_SIZE=<BATCH_SIZE> \
   -e PGUSER=<PGUSER> \
+  -e PGPASSWORD=<PGPASSWORD>
   -e S3_PREFIX=<PREFIX> \
   <image_name>
 ```
@@ -47,7 +48,7 @@ docker run -it --env-file ../secrets.env \
   -e BATCH_SIZE=10 \
   -e PGUSER=cp1234 \
   -e PGPASSWORD=jhgdkjfhgsk \
-  -e S3_PREFIX=DRC/attachments \
+  -e S3_PREFIX=DRC/Attachments \
   my_app_image
 ```
 
