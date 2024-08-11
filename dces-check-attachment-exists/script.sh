@@ -73,7 +73,7 @@ offset=0
 while : ; do
     echo "Fetching records with offset=$offset and batch size=$BATCH_SIZE" >&2
     # Fetch a batch of records from PostgreSQL
-    records=$(psql -h "$PGHOST" -d "$PGDATABASE" -U "$PGUSER" -t -A -F '|' -c "COPY (SELECT id, fullname || '/' || name as file_path FROM marston.test_attachments WHERE file_exists IS NULL or file_exists = false LIMIT $BATCH_SIZE OFFSET $offset) TO STDOUT WITH CSV DELIMITER '|'")
+    records=$(psql -h "$PGHOST" -d "$PGDATABASE" -U "$PGUSER" -t -A -F '|' -c "COPY (SELECT id, REPLACE(fullname, '\', '/') as file_path FROM marston.test_attachments WHERE (file_exists IS NULL or file_exists = false) and batch_id is not null LIMIT $BATCH_SIZE OFFSET $offset) TO STDOUT WITH CSV DELIMITER '|'")
 
     # Break the loop if no records are returned
     if [[ -z "$records" ]]; then
