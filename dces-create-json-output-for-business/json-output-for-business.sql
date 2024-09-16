@@ -477,7 +477,19 @@ SELECT json_agg(
 																																			FROM marston.laalacesexperianmortgageentries_20240810_1 experianmortgageentries
 																																			WHERE experianmortgageentries.ExperianEntryID = experianentries.RecordID
 																																		) experianmortgageentries
-																																	)
+																																	),
+																															'LACES-EXPERIAN-ASSOCIATIONS', (
+																															            SELECT json_agg(
+																															                json_build_object(
+																															                    'ExperianAssociationsRecordID', experianassociations.experianassociationsrecordid,
+																															                    'ExperianEntriesRecordID', experianassociations.experianentriesrecordid,
+																															                    'LinkedName', experianassociations.linkedname,
+																															                    'IsIgnored', experianassociations.isignored
+																															                )
+																															            )
+																															            FROM marston.laalacesexperianassociations_20240810_1 experianassociations
+																															            WHERE experianassociations.experianentriesrecordid = experianentries.recordid
+																															        )
 																															)
 																											)
 																							FROM (
@@ -524,8 +536,10 @@ FROM marston.laacases_20240810_1 cases,
 WHERE cases.caseid = defendant.caseid
 AND cases.caseid = balance.caseid
 AND cases.caseid = casedetail.caseid
-AND (cases.caseid in ('12846524','12846653','12846530','12846525','12846564')
-	OR cases.clientcasereference in ('3499268'))
+AND (
+	cases.caseid in ('')
+	OR cases.clientcasereference in ('6539359')
+	)
 
 
 
