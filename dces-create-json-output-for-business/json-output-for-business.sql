@@ -40,8 +40,8 @@ SELECT json_agg(
 																)
 												FROM (
 													SELECT caselinks.LinkID,caselinks.LinkedCaseID,cases2.clientcasereference,caselinks.LoadedOn
-													FROM marston.laacaselinks_20240810_1 caselinks,
-													     marston.laacases_20240810_1 cases2
+													FROM marston.laacaselinks_20240916 caselinks,
+													     marston.laacases_20240916 cases2
 													WHERE caselinks.caseid = cases2.caseid
 													AND caselinks.caseid = cases.caseid
 												) caselinks
@@ -62,7 +62,7 @@ SELECT json_agg(
 																)
 												FROM (
 													SELECT *
-													FROM marston.laacasecharges_20240810_1 charges
+													FROM marston.laacasecharges_20240916 charges
 													WHERE charges.caseid = cases.caseid
 													ORDER BY charges.chargedate ASC  -- ORDER the rows here
 												) charges
@@ -86,7 +86,7 @@ SELECT json_agg(
 																)
 												FROM (
 													SELECT *
-													FROM marston.laacasepayments_20240810_1 payments
+													FROM marston.laacasepayments_20240916 payments
 													WHERE payments.caseid = cases.caseid
 													ORDER BY payments.TransactionDate ASC  -- ORDER the rows here
 												) payments
@@ -108,7 +108,7 @@ SELECT json_agg(
 																)
 												FROM (
 													SELECT *
-													FROM marston.laacasearrangements_20240810_1 arrangements
+													FROM marston.laacasearrangements_20240916 arrangements
 													WHERE arrangements.caseid = cases.caseid
 													ORDER BY arrangements.SetupDate ASC  -- ORDER the rows here
 												) arrangements
@@ -124,7 +124,7 @@ SELECT json_agg(
 																)
 												FROM (
 													SELECT *
-													FROM marston.laacasevisits_20240810_1 visits
+													FROM marston.laacasevisits_20240916 visits
 													WHERE visits.caseid = cases.caseid
 													ORDER BY visits.VisitDate ASC  -- ORDER the rows here
 												) visits
@@ -140,7 +140,7 @@ SELECT json_agg(
 																)
 												FROM (
 													SELECT *
-													FROM marston.laacaseadditionaldata_20240810_1 additionaldata
+													FROM marston.laacaseadditionaldata_20240916 additionaldata
 													WHERE additionaldata.caseid = cases.caseid
 													ORDER BY additionaldata.LoadedOn ASC  -- ORDER the rows here
 												) additionaldata
@@ -158,7 +158,7 @@ SELECT json_agg(
 																)
 												FROM (
 													SELECT *
-													FROM marston.laacaseholds_20240810_1 holds
+													FROM marston.laacaseholds_20240916 holds
 													WHERE holds.caseid = cases.caseid
 													ORDER BY holds.HoldDate ASC  -- ORDER the rows here
 												) holds
@@ -184,7 +184,7 @@ SELECT json_agg(
 																)
 												FROM (
 													SELECT *
-													FROM marston.laadefaulterscontactaddresses_20240810_1 address
+													FROM marston.laadefaulterscontactaddresses_20240916 address
 													WHERE address.caseid = cases.caseid
 													ORDER BY address.LoadedOn ASC  -- ORDER the rows here
 												) address
@@ -205,7 +205,7 @@ SELECT json_agg(
 																)
 												FROM (
 													SELECT *
-													FROM marston.laadefaultersemails_20240810_1 email
+													FROM marston.laadefaultersemails_20240916 email
 													WHERE email.caseid = cases.caseid
 													ORDER BY email.LoadedOn ASC  -- ORDER the rows here
 												) email
@@ -226,7 +226,7 @@ SELECT json_agg(
 																)
 												FROM (
 													SELECT *
-													FROM marston.laadefaultersphones_20240810_1 phone
+													FROM marston.laadefaultersphones_20240916 phone
 													WHERE phone.caseid = cases.caseid
 													ORDER BY phone.LoadedOn ASC  -- ORDER the rows here
 												) phone
@@ -242,7 +242,7 @@ SELECT json_agg(
 																)
 												FROM (
 													SELECT *
-													FROM marston.laacasenotes_20240810_1 notes
+													FROM marston.laacasenotes_20240916 notes
 													WHERE notes.caseid = cases.caseid
 													ORDER BY notes.LoadedOn ASC  -- ORDER the rows here
 												) notes
@@ -258,7 +258,7 @@ SELECT json_agg(
 																)
 												FROM (
 													SELECT *
-													FROM marston.laacasehistory_20240810_1 history
+													FROM marston.laacasehistory_20240916 history
 													WHERE history.caseid = cases.caseid
 													ORDER BY history.LoadedOn ASC  -- ORDER the rows here
 												) history
@@ -275,7 +275,7 @@ SELECT json_agg(
 																)
 												FROM (
 													SELECT *
-													FROM marston.laacaseassignments_20240810_1 assignments
+													FROM marston.laacaseassignments_20240916 assignments
 													WHERE assignments.caseid = cases.caseid
 													ORDER BY assignments.LoadedOn ASC  -- ORDER the rows here
 												) assignments
@@ -292,7 +292,7 @@ SELECT json_agg(
 																)
 												FROM (
 													SELECT *
-													FROM marston.laacaseworkflow_20240810_1 workflow
+													FROM marston.laacaseworkflow_20240916 workflow
 													WHERE workflow.caseid = cases.caseid
 													ORDER BY workflow.LoadedOn ASC  -- ORDER the rows here
 												) workflow
@@ -310,7 +310,7 @@ SELECT json_agg(
 																)
 												FROM (
 													SELECT *
-													FROM marston.laacaseattachments_20240810_1 attachments
+													FROM marston.laacaseattachments_20240916 attachments
 													WHERE attachments.caseid = cases.caseid
 													ORDER BY attachments.LoadedOn ASC  -- ORDER the rows here
 												) attachments
@@ -356,7 +356,7 @@ SELECT json_agg(
 																																						)
 																																		FROM (
 																																			SELECT *
-																																			FROM marston.laalacesassignments_20240810_1 lacesasgmt
+																																			FROM marston.laalacesassignments_20240916 lacesasgmt
 																																			WHERE lacesasgmt.lacescaseid = lacescases.lacescaseid
 																																			ORDER BY lacesasgmt.StartDate ASC  -- ORDER the rows here
 																																		) lacesasgmt
@@ -364,18 +364,18 @@ SELECT json_agg(
 																															'LACES-CASEACTIONS', (
 																																		SELECT json_agg(
 																																						json_build_object(
-																																										'ChangeDate', lacescaseactions.ChangeDate,
-																																										'ActionType', lacescaseactions.ActionType,
-																																										'Description', lacescaseactions.Description,
-																																										'NewStatus', lacescaseactions.NewStatus
+																																										'ChangeDate', lacescasesactions.ChangeDate,
+																																										'ActionType', lacescasesactions.ActionType,
+																																										'Description', lacescasesactions.Description,
+																																										'NewStatus', lacescasesactions.NewStatus
 																																										)
 																																						)
 																																		FROM (
 																																			SELECT *
-																																			FROM marston.laalacescaseactions_20240810_1 lacescaseactions
-																																			WHERE lacescaseactions.lacescaseid = lacescases.lacescaseid
-																																			ORDER BY lacescaseactions.ChangeDate ASC  -- ORDER the rows here
-																																		) lacescaseactions
+																																			FROM marston.laalacescasesactions_20240916 lacescasesactions
+																																			WHERE lacescasesactions.lacescaseid = lacescases.lacescaseid
+																																			ORDER BY lacescasesactions.ChangeDate ASC  -- ORDER the rows here
+																																		) lacescasesactions
 																																	),
 																															'LACES-PROPERTIES', (
 																																		SELECT json_agg(
@@ -419,7 +419,7 @@ SELECT json_agg(
 																																																												)
 																																																								FROM (
 																																																									SELECT *
-																																																									FROM marston.laalaceslandregistryassociations_20240810_1 laceslandregAssn
+																																																									FROM marston.laalaceslandregistryassociations_20240916 laceslandregAssn
 																																																									WHERE laceslandregAssn.LandRegistryEntryID = laceslandregentries.RecordID
 																																																								) laceslandregAssn
 																																																							)
@@ -427,7 +427,7 @@ SELECT json_agg(
 																																																	)
 																																													FROM (
 																																														SELECT *
-																																														FROM marston.laalaceslandregistryentries_20240810_1 laceslandregentries
+																																														FROM marston.laalaceslandregistryentries_20240916 laceslandregentries
 																																														WHERE laceslandregentries.PropertyID = lacesproperties.RecordID
 																																													) laceslandregentries
 																																												)
@@ -435,7 +435,7 @@ SELECT json_agg(
 																																						)
 																																		FROM (
 																																			SELECT *
-																																			FROM marston.laalacesproperties_20240810_1 lacesproperties
+																																			FROM marston.laalacesproperties_20240916 lacesproperties
 																																			WHERE lacesproperties.lacescaseid = lacescases.lacescaseid
 																																			ORDER BY lacesproperties.RecordId ASC  -- ORDER the rows here
 																																		) lacesproperties
@@ -444,7 +444,7 @@ SELECT json_agg(
 																											)
 																							FROM (
 																								SELECT *
-																								FROM marston.laalacescases_20240810_1 lacescases
+																								FROM marston.laalacescases_20240916 lacescases
 																								WHERE lacescases.lacescaseid = lacesdata.lacescaseid
 																								ORDER BY lacescases.LastUpdate ASC  -- ORDER the rows here
 																							) lacescases
@@ -474,7 +474,7 @@ SELECT json_agg(
 																																						)
 																																		FROM (
 																																			SELECT *
-																																			FROM marston.laalacesexperianmortgageentries_20240810_1 experianmortgageentries
+																																			FROM marston.laalacesexperianmortgageentries_20240916 experianmortgageentries
 																																			WHERE experianmortgageentries.ExperianEntryID = experianentries.RecordID
 																																		) experianmortgageentries
 																																	),
@@ -487,14 +487,14 @@ SELECT json_agg(
 																															                    'IsIgnored', experianassociations.isignored
 																															                )
 																															            )
-																															            FROM marston.laalacesexperianassociations_20240810_1 experianassociations
+																															            FROM marston.laalacesexperianassociations_20240916 experianassociations
 																															            WHERE experianassociations.experianentriesrecordid = experianentries.recordid
 																															        )
 																															)
 																											)
 																							FROM (
 																								SELECT *
-																								FROM marston.laalacesexperianentries_20240810_1 experianentries
+																								FROM marston.laalacesexperianentries_20240916 experianentries
 																								WHERE experianentries.lacescaseid = lacesdata.lacescaseid
 																								ORDER BY experianentries.LastUpdateDate ASC  -- ORDER the rows here
 																							) experianentries
@@ -513,7 +513,7 @@ SELECT json_agg(
 																											)
 																							FROM (
 																								SELECT *
-																								FROM marston.laalacesaudit_20240810_1 lacesaudit
+																								FROM marston.laalacesaudit_20240916 lacesaudit
 																								WHERE lacesaudit.RowID = lacesdata.RecordID
 																								ORDER BY lacesaudit.AuditDate ASC  -- ORDER the rows here
 																							) lacesaudit
@@ -522,17 +522,17 @@ SELECT json_agg(
 																)
 												FROM (
 													SELECT *
-													FROM marston.laalacesdatawarehouse_20240810_1 lacesdata
+													FROM marston.laalacesdatawarehouse_20240916 lacesdata
 													WHERE lacesdata.maatid = cases.clientcasereference
 													ORDER BY lacesdata.LoadedOn ASC  -- ORDER the rows here
 												) lacesdata
 											)
 								)
 			) AS Cases_JSON
-FROM marston.laacases_20240810_1 cases,
-     marston.laadefaulters_20240810_1 defendant,
-	 marston.laacasebalance_20240810_1 balance,
-	 marston.laacasedetails_20240810_1 casedetail
+FROM marston.laacases_20240916 cases,
+     marston.laadefaulters_20240916 defendant,
+	 marston.laacasebalance_20240916 balance,
+	 marston.laacasedetails_20240916 casedetail
 WHERE cases.caseid = defendant.caseid
 AND cases.caseid = balance.caseid
 AND cases.caseid = casedetail.caseid
@@ -544,15 +544,15 @@ AND (
 
 
 /*
-ALTER TABLE marston.laalaceslandregistryassociations_20240810_1
+ALTER TABLE marston.laalaceslandregistryassociations_20240916
 ALTER COLUMN landregistryentryid TYPE integer
 USING landregistryentryid::integer;
 
-CREATE INDEX idx_laalacesexperianmortgageentries_20240810_1_ExperianEntryID ON marston.laalacesexperianmortgageentries_20240810_1 (ExperianEntryID);
+CREATE INDEX idx_laalacesexperianmortgageentries_20240916_ExperianEntryID ON marston.laalacesexperianmortgageentries_20240916 (ExperianEntryID);
 
-CREATE INDEX idx_laalaceslandregistryassociations_20240810_1_landregentryid ON marston.laalaceslandregistryassociations_20240810_1 (landregistryentryid);
+CREATE INDEX idx_laalaceslandregistryassociations_20240916_landregentryid ON marston.laalaceslandregistryassociations_20240916 (landregistryentryid);
 
-drop index marston.idx_laalaceslandregistryassociations_20240810_1_landregistryent
+drop index marston.idx_laalaceslandregistryassociations_20240916_landregistryent
 
 */
 
