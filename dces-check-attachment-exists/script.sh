@@ -39,7 +39,7 @@ update_db_record() {
     local id=$1
     local file_exists=$2
     echo "Updating record with id $id to file_exists=$file_exists" >&2
-    psql -h "$PGHOST" -d "$PGDATABASE" -U "$PGUSER" -c "UPDATE marston.test_attachments SET file_exists = '$file_exists' WHERE id = $id" >/dev/null 2>&1
+    psql -h "$PGHOST" -d "$PGDATABASE" -U "$PGUSER" -c "UPDATE marston.laacaseattachments SET file_exists = '$file_exists' WHERE id = $id" >/dev/null 2>&1
     if [[ $? -ne 0 ]]; then
         echo "Error: Failed to update record with id $id" >&2
     fi
@@ -73,7 +73,7 @@ offset=0
 while : ; do
     echo "Fetching records with offset=$offset and batch size=$BATCH_SIZE" >&2
     # Fetch a batch of records from PostgreSQL
-    records=$(psql -h "$PGHOST" -d "$PGDATABASE" -U "$PGUSER" -t -A -F '|' -c "COPY (SELECT id, REPLACE(fullname, '\', '/') as file_path FROM marston.test_attachments WHERE (file_exists IS NULL or file_exists = false) and batch_id is not null LIMIT $BATCH_SIZE OFFSET $offset) TO STDOUT WITH CSV DELIMITER '|'")
+    records=$(psql -h "$PGHOST" -d "$PGDATABASE" -U "$PGUSER" -t -A -F '|' -c "COPY (SELECT id, REPLACE(fullname, '\', '/') as file_path FROM marston.laacaseattachments WHERE (file_exists IS NULL or file_exists = false) and batch_id is not null LIMIT $BATCH_SIZE OFFSET $offset) TO STDOUT WITH CSV DELIMITER '|'")
 
     # Break the loop if no records are returned
     if [[ -z "$records" ]]; then
