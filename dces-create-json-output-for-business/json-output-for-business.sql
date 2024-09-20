@@ -1,7 +1,3 @@
-
-
-
-
 SELECT json_agg(
 				json_build_object(
 									'CaseID', cases.caseid,
@@ -16,6 +12,7 @@ SELECT json_agg(
 									'LoadeOn', defendant.LoadedOn,
 									'OutstandingBalance', balance.OutstandingBalance,
 									'OriginalBalance', balance.OriginalBalance,
+									'OriginalBalanceDate', balance.OriginalBalanceDate,
 									'ClientName', casedetail.ClientName,
 									'ClientCaseRef', casedetail.ClientCaseReference,
 									'ClientDefaulterRef', casedetail.ClientDefaulterReference,
@@ -103,7 +100,8 @@ SELECT json_agg(
 																				'NumberOfInstalments', arrangements.NumberOfInstalments,
 																				'InstalmentFrequency', arrangements.InstalmentFrequency,
 																				'Status', arrangements.Status,
-																				'StatusDate', arrangements.StatusDate
+																				'StatusDate', arrangements.StatusDate,
+																				'LoadedBy', arrangements.LoadedBy
 																				 )
 																)
 												FROM (
@@ -113,6 +111,26 @@ SELECT json_agg(
 													ORDER BY arrangements.SetupDate ASC  -- ORDER the rows here
 												) arrangements
 											),
+									        'REFUNDS', (
+										            SELECT json_agg(
+										                json_build_object(
+										                    'RefundRecordID', refunds.RefundRecordID,
+										                    'CaseNumber', refunds.CaseNumber,
+										                    'RefundDate', refunds.RefundDate,
+										                    'ApprovedDate', refunds.ApprovedDate,
+										                    'RejectedDate', refunds.RejectedDate,
+										                    'CancelledDate', refunds.CancelledDate,
+										                    'CompletedDate', refunds.CompletedDate,
+										                    'Amount', refunds.Amount,
+										                    'Status', refunds.Status,
+										                    'RefundType', refunds.RefundType,
+										                    'RefundMethod', refunds.RefundMethod,
+										                    'LoadedBy', refunds.LoadedBy
+										                )
+										            )
+										            FROM marston.laacaserefunds_20240916 refunds
+										            WHERE refunds.caseid = cases.caseid
+										        ),
 									'CASE-VISITS', (
 												SELECT json_agg(
 																json_build_object(
@@ -231,6 +249,23 @@ SELECT json_agg(
 													ORDER BY phone.LoadedOn ASC  -- ORDER the rows here
 												) phone
 											),
+									'WELFARE', (
+                                                SELECT json_agg(
+                                                    json_build_object(
+                                                        'WelfareRecordID', welfare.WelfareRecordID,
+                                                        'CaseNumber', welfare.CaseNumber,
+                                                        'DefaulterID', welfare.DefaulterID,
+                                                        'LoadedOn', welfare.LoadedOn,
+                                                        'LoadedBy', welfare.LoadedBy,
+                                                        'WelfareCategory', welfare.WelfareCategory,
+                                                        'ProofProvided', welfare.proofproivded,
+                                                        'Note', welfare.Note
+                                                    )
+                                                )
+                                                FROM marston.laadefaulterswelfare_20240916 welfare
+                                                WHERE welfare.caseid = cases.caseid
+                                            ),
+
 									'NOTES', (
 												SELECT json_agg(
 																json_build_object(
@@ -253,7 +288,8 @@ SELECT json_agg(
 																				'CaseHistoryRecordID', history.CaseHistoryRecordID,
 																				'LoadedOn', history.LoadedOn,
 																				'Comment', history.Comment,
-																				'NoteType', history.NoteType
+																				'NoteType', history.NoteType,
+																				'LoadedBy', history.LoadedBy
 																				 )
 																)
 												FROM (
@@ -287,7 +323,9 @@ SELECT json_agg(
 																				'LoadedOn', workflow.LoadedOn,
 																				'Comment', workflow.Comment,
 																				'Phase', workflow.Phase,
-																				'Stage', workflow.Stage
+																				'Stage', workflow.Stage,
+																				'LoadedBy', workflow.LoadedBy,
+																				'UserId', workflow.UserId
 																				 )
 																)
 												FROM (
@@ -528,7 +566,7 @@ SELECT json_agg(
 												) lacesdata
 											)
 								)
-			) AS Cases_JSON
+			)
 FROM marston.laacases_20240916 cases,
      marston.laadefaulters_20240916 defendant,
 	 marston.laacasebalance_20240916 balance,
@@ -537,27 +575,6 @@ WHERE cases.caseid = defendant.caseid
 AND cases.caseid = balance.caseid
 AND cases.caseid = casedetail.caseid
 AND (
-	cases.caseid in ('')
-	OR cases.clientcasereference in ('6539359')
+	cases.caseid in ('12849240')
+	--OR cases.clientcasereference in ('7540536')
 	)
-
-
-
-/*
-ALTER TABLE marston.laalaceslandregistryassociations_20240916
-ALTER COLUMN landregistryentryid TYPE integer
-USING landregistryentryid::integer;
-
-CREATE INDEX idx_laalacesexperianmortgageentries_20240916_ExperianEntryID ON marston.laalacesexperianmortgageentries_20240916 (ExperianEntryID);
-
-CREATE INDEX idx_laalaceslandregistryassociations_20240916_landregentryid ON marston.laalaceslandregistryassociations_20240916 (landregistryentryid);
-
-drop index marston.idx_laalaceslandregistryassociations_20240916_landregistryent
-
-*/
-
-
-
-
-
-
