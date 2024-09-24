@@ -1,9 +1,9 @@
-SELECT json_agg(
+SELECT
     json_build_object(
         'CaseID', cases.caseid,
         'CaseNumber', cases.casenumber,
         'ClientCaseRef-maatID', cases.clientcasereference,
-        'CaseLoadedOn', cases.loadedon,  -- Renamed
+        'CaseLoadedOn', cases.loadedon,  -- Renamed to ensure uniqueness
         'PrevCaseRef', cases.previouscasereference,
         'DefendantID', defendant.defaulterid,
         'Name', defendant.Name,
@@ -24,8 +24,9 @@ SELECT json_agg(
         'CourtName', casedetail.CourtName,
         'Outcome', casedetail.Outcome,
         'SentenceOrderDate', casedetail.SentenceOrderDate,
-        'CaseDetailLoadedOn', casedetail.LoadedOn,  -- Renamed
+        'CaseDetailLoadedOn', casedetail.LoadedOn,  -- Renamed to ensure uniqueness
         'LoadedBy', casedetail.LoadedBy,
+
         'CASE-LINKS', (
             SELECT json_agg(
                 json_build_object(
@@ -46,6 +47,7 @@ SELECT json_agg(
                 WHERE caselinks.caseid = cases.caseid
             ) caselinks
         ),
+
         'CHARGES', (
             SELECT json_agg(
                 json_build_object(
@@ -67,6 +69,7 @@ SELECT json_agg(
                 ORDER BY charges.chargedate ASC  -- ORDER the rows here
             ) charges
         ),
+
         'PAYMENTS', (
             SELECT json_agg(
                 json_build_object(
@@ -91,6 +94,7 @@ SELECT json_agg(
                 ORDER BY payments.TransactionDate ASC  -- ORDER the rows here
             ) payments
         ),
+
         'PAYMENT-ARRANGEMENTS', (
             SELECT json_agg(
                 json_build_object(
@@ -114,6 +118,7 @@ SELECT json_agg(
                 ORDER BY arrangements.SetupDate ASC  -- ORDER the rows here
             ) arrangements
         ),
+
         'REFUNDS', (
             SELECT json_agg(
                 json_build_object(
@@ -131,9 +136,14 @@ SELECT json_agg(
                     'LoadedBy', refunds.LoadedBy
                 )
             )
-            FROM marston.laacaserefunds_20240916 refunds
-            WHERE refunds.caseid = cases.caseid
+            FROM (
+                SELECT *
+                FROM marston.laacaserefunds_20240916 refunds
+                WHERE refunds.caseid = cases.caseid
+                ORDER BY refunds.refunddate ASC  -- ORDER the rows here
+            ) refunds
         ),
+
         'CASE-VISITS', (
             SELECT json_agg(
                 json_build_object(
@@ -150,6 +160,7 @@ SELECT json_agg(
                 ORDER BY visits.VisitDate ASC  -- ORDER the rows here
             ) visits
         ),
+
         'ADDITIONAL-DATA', (
             SELECT json_agg(
                 json_build_object(
@@ -166,6 +177,7 @@ SELECT json_agg(
                 ORDER BY additionaldata.LoadedOn ASC  -- ORDER the rows here
             ) additionaldata
         ),
+
         'HOLDS', (
             SELECT json_agg(
                 json_build_object(
@@ -184,6 +196,7 @@ SELECT json_agg(
                 ORDER BY holds.HoldDate ASC  -- ORDER the rows here
             ) holds
         ),
+
         'ADDRESSES', (
             SELECT json_agg(
                 json_build_object(
@@ -210,6 +223,7 @@ SELECT json_agg(
                 ORDER BY address.LoadedOn ASC  -- ORDER the rows here
             ) address
         ),
+
         'EMAILS', (
             SELECT json_agg(
                 json_build_object(
@@ -231,6 +245,7 @@ SELECT json_agg(
                 ORDER BY email.LoadedOn ASC  -- ORDER the rows here
             ) email
         ),
+
         'PHONES', (
             SELECT json_agg(
                 json_build_object(
@@ -252,6 +267,7 @@ SELECT json_agg(
                 ORDER BY phone.LoadedOn ASC  -- ORDER the rows here
             ) phone
         ),
+
         'WELFARE', (
             SELECT json_agg(
                 json_build_object(
@@ -262,15 +278,17 @@ SELECT json_agg(
                     'WelfareCategory', welfare.WelfareCategory,
                     'ProofProvided', welfare.proofproivded,  -- Corrected typo
                     'Note', welfare.Note,
-					'LoadedOn', welfare.LoadedOn
+                    'LoadedOn', welfare.LoadedOn  -- Ensured uniqueness
                 )
             )
-            FROM (SELECT *
-			FROM marston.LAADefaultersWelfare_20240916 welfare
-            WHERE welfare.caseid = cases.caseid
-            ORDER BY welfare.LoadedOn ASC  -- ORDER the rows here
-			) welfare
+            FROM (
+                SELECT *
+                FROM marston.LAADefaultersWelfare_20240916 welfare
+                WHERE welfare.caseid = cases.caseid
+                ORDER BY welfare.LoadedOn ASC  -- ORDER the rows here
+            ) welfare
         ),
+
         'NOTES', (
             SELECT json_agg(
                 json_build_object(
@@ -287,6 +305,7 @@ SELECT json_agg(
                 ORDER BY notes.LoadedOn ASC  -- ORDER the rows here
             ) notes
         ),
+
         'HISTORY', (
             SELECT json_agg(
                 json_build_object(
@@ -304,6 +323,7 @@ SELECT json_agg(
                 ORDER BY history.LoadedOn ASC  -- ORDER the rows here
             ) history
         ),
+
         'ASSIGNMENTS', (
             SELECT json_agg(
                 json_build_object(
@@ -321,6 +341,7 @@ SELECT json_agg(
                 ORDER BY assignments.LoadedOn ASC  -- ORDER the rows here
             ) assignments
         ),
+
         'WORKFLOW', (
             SELECT json_agg(
                 json_build_object(
@@ -340,6 +361,7 @@ SELECT json_agg(
                 ORDER BY workflow.LoadedOn ASC  -- ORDER the rows here
             ) workflow
         ),
+
         'ATTACHMENTS', (
             SELECT json_agg(
                 json_build_object(
@@ -358,6 +380,7 @@ SELECT json_agg(
                 ORDER BY attachments.LoadedOn ASC  -- ORDER the rows here
             ) attachments
         ),
+
         'LACES-DATA', (
             SELECT json_agg(
                 json_build_object(
@@ -570,13 +593,11 @@ SELECT json_agg(
                 ORDER BY lacesdata.LoadedOn ASC  -- ORDER the rows here
             ) lacesdata
         )
-    )
-) AS Cases_JSON
+    ) AS Case_JSON
 FROM marston.laacases_20240916 cases
 JOIN marston.laadefaulters_20240916 defendant ON cases.caseid = defendant.caseid
 JOIN marston.laacasebalance_20240916 balance ON cases.caseid = balance.caseid
 JOIN marston.laacasedetails_20240916 casedetail ON cases.caseid = casedetail.caseid
 WHERE
-    -- cases.caseid IN ('12849240')
-    cases.clientcasereference IN ('6145128')
+    cases.clientcasereference IN ('7373555', '7870522','7592861','7163862','7605727','7445032')
 ;
