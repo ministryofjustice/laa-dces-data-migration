@@ -23,4 +23,4 @@ the tables and columns to be anonymised are contained in a table called ANONYMIS
 - Finally to export the data to CSV we ran a procedure called anonymised.generate_copy_statements which loops through tables in the anonymised scheme and constructs a copy statement which gets output to the terminal.
   - The output can be copied into a file e.g. copy_statements.txt
   - and then the file can be run from psql like this:
-  - - psql -h localhost -p 5432 -U <dbuser> -W -d laa_dces_data_migration_dev_db -f /Users/tariq.hossain/marston-csv/tmp/copy_statements.txt
+  - psql -h localhost -p 5432 -U <dbuser> -W -d laa_dces_data_migration_dev_db -f /Users/tariq.hossain/marston-csv/tmp/copy_statements.txt
