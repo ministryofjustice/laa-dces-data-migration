@@ -3,7 +3,7 @@
 - we copied the set of tables from the marston schema to a new anonymisation schema using a procedure: anonymised.copy_tables_to_anonymised
 - we created a procedure called anonymised.anonymise_data that loops through a set of columns of specific tables. This in turn calls another procedure anonymised.create_keep_case_mapping, depending on the anonymisation met
 the tables and columns to be anonymised are contained in a table called ANONYMISATION.CONTROL_TABLE. This table contains:
-- - table name
+  - table name
 - - column name
 - - anonymisation method
 
