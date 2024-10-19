@@ -10,11 +10,12 @@ Clone Repository
 git clone git@github.com:ministryofjustice/laa-dces-data-migration.git
 
 cd laa-dces-data-migration
+cd dces-extract-load-csv-files
 ```
 
 ### To build the container
 
-In the directory where the Dockerfile is located, run the following 
+In the directory where the Dockerfile is located, run the Docker Desktop and then run the following 
 ```
 docker build -t <image_name> .
 ```
@@ -36,25 +37,46 @@ docker run -it --env-file ../secrets.env \
   -e BATCH_ID=<BATCH_ID> \
   -e PGUSER=<PGUSER> \
   -e S3_PREFIX=<PREFIX> \
-  -e FILE_PATTERN=<FILE_PATTERN> \
+  -e FILE_PATTERN=<FILE_PATTERN> -e COMMENT=<COMMENT> \
   <image_name>
 ```
 
-***An example***
+***Examples***
 
 ```
 docker run -it --env-file ../secrets.env \
   -v ~/.aws:/root/.aws \
   -e BATCH_ID=20241507 \
   -e PGUSER=cp1234 \
-  -e S3_PREFIX=DRC/ \
-  -e FILE_PATTERN=ccmt \
+  -e S3_PREFIX=DRC/20241507-1 \
+  -e FILE_PATTERN="*" -e COMMENT="this will import ALL the files in the DRC/20241507-1 folder prefix" \
+  my_app_image
+  
+OR
+  
+docker run -it --env-file ../secrets.env \
+  -v ~/.aws:/root/.aws \
+  -e BATCH_ID=20241507 \
+  -e PGUSER=cp1234 \
+  -e S3_PREFIX=DRC/20241507-1 \
+  -e FILE_PATTERN=casebalance -e COMMENT="this will import ONLY files in the DRC/20241507-1 folder prefix that contain casebalance in the filename" \
   my_app_image
 ```
 
+***Specifics about the example referred directly above***
+
+- 20241507 (BATCH ID): tables in postgres will be created with this postfix e.g. laacasecharges_20241507. This would probably be the date that Marston send the files to us.
+- cp1234 (PGUSER): this is the database username which can be retrieved from Kubernetes Secrets
+- DRC/20241507-1 (S3_PREFIX): this is the prefix in the S3 bucket where the files are located. The program will look in this 'folder' to pick up files.
+- You can import all files in the folder by using eg: FILE_PATTERN="*"
+- Or you can import specific files in the folder by specifying the file pattern match eg: FILE_PATTERN=casebalance
+- COMMENT: any comment entered appear in the comments column of the postgres DATALOAD_FILE_AUDIT column
+- my_app_image: this is the name of the image which you built earlier
+
 ### During container run
 
-You will be prompted for the database password which you should enter by retrieving from Kubernetes secrets
+- You will be prompted for the database password which you should enter by retrieving from Kubernetes secrets
+- Therefore make sure the database is up and the port forward pod in running
 
 ### After container runs
 - Check any error messages.
