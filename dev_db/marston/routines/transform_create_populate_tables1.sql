@@ -49,7 +49,7 @@ BEGIN
 			'caseid', 'caseid', 'caseid'
             ,'caseid', 'caseid' --25
             ,'lacescaseid', 'lacescaseid', 'lacescaseid', 'lacescaseid', 'lacescaseid', 'lacescaseid'
-            ,'experianentryid', 'ExperianEntriesRecordID', 'propertyid', 'landregistryentryid'
+          --  ,'experianentryid', 'ExperianEntriesRecordID', 'propertyid', 'landregistryentryid' -- 26/11/2024: AC - to fix issue on DCES-619
             
         ])
     LOOP
