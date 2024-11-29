@@ -285,4 +285,11 @@ WHERE clientcasereference = 'A1043EL';
 DELETE FROM transform.laadefaulters
 WHERE defaulterid IN ('13184712', '13203526', '13240529');
 
+-- DCES-632 // Populating missing clientdefaulterreference value from maat's extract
+UPDATE transform.laacasedetails a
+SET clientdefaulterreference = (SELECT applid FROM marston.maat_applicantid m
+WHERE m.maatid = a.clientcasereference)
+WHERE (clientdefaulterreference = 'NULL' OR clientdefaulterreference =''
+OR clientdefaulterreference is null);
+
 END;
