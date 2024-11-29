@@ -281,6 +281,8 @@ UPDATE transform.laacasedetails
 SET clientcasereference = '6416537'
 WHERE clientcasereference = 'A1043EL';
 
-
+-- DCES-612 // Removing duplicate and incorrect defendants, hardcoding it as this shoudn't happen again
+DELETE FROM transform.laadefaulters
+WHERE defaulterid IN ('13184712', '13203526', '13240529');
 
 END;
