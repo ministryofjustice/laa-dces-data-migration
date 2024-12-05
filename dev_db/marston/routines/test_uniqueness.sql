@@ -56,9 +56,9 @@ BEGIN
         -- Reset current_condition for each iteration
         current_condition := NULL;
         
-        -- Replace .csv with _20241018 and convert to lowercase
+        -- Replace .csv with _20241203 and convert to lowercase
         table_base_name := lower(regexp_replace(current_pair.table_name, '\.csv$', '', 'i'));
-        constructed_table_name := table_base_name || '_20241018';
+        constructed_table_name := table_base_name || '_20241203';
         
         -- Output a NOTICE indicating the start of uniqueness check for the table
         RAISE NOTICE 'Uniqueness checks for %.% table has started', schema_name, constructed_table_name;
