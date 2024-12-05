@@ -1,4 +1,3 @@
-
 DECLARE
     source_table_name TEXT;
     target_table_name TEXT;
@@ -16,7 +15,8 @@ BEGIN
     -- Loop through the list of target tables and perform operations
     FOR target_table_name, join_key IN
         SELECT unnest(ARRAY[
-            'maat_outcomesodfdc','maat_defendantdetails','lacesduplicates','laceskeenrichment'
+            'maat_outcomesodfdc'--,'maat_defendantdetails'
+			,'lacesduplicates','laceskeenrichment'
 			,'LAACases', 'LAACaseDetails', 'LAADefaulters'
             , 'LAADefaultersPhones', 'LAADefaultersEMails','LAADefaultersContactAddresses'
 			, 'LAADefaultersPhonesAudit', 'LAADefaultersEMailsAudit','LAADefaultersContactAddressesAudit'
@@ -37,7 +37,8 @@ BEGIN
             ,'LAALACESAudit'
         ]),
         unnest(ARRAY[
-            'maatid','maatid', 'caseid','lacescaseid'
+            'maatid'--,'maatid'
+			, 'caseid','lacescaseid'
 			,'caseid', 'caseid', 'caseid' 
             ,'caseid', 'caseid', 'caseid', 
 			'caseid', 'caseid', 'caseid',
@@ -284,5 +285,12 @@ WHERE clientcasereference = 'A1043EL';
 -- DCES-612 // Removing duplicate and incorrect defendants, hardcoding it as this shoudn't happen again
 DELETE FROM transform.laadefaulters
 WHERE defaulterid IN ('13184712', '13203526', '13240529');
+
+-- DCES-632 // Populating missing clientdefaulterreference value from maat's extract
+UPDATE transform.laacasedetails a
+SET clientdefaulterreference = (SELECT applid FROM marston.maat_applicantid m
+WHERE m.maatid = a.clientcasereference)
+WHERE (clientdefaulterreference = 'NULL' OR clientdefaulterreference =''
+OR clientdefaulterreference is null);
 
 END;
