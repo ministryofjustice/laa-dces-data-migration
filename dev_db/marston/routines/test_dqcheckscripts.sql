@@ -2,24 +2,24 @@
 -- CASEDETAILS
 ---- CASEDETAILS - number of populated records
 WITH 
-    -- Aggregate maximum loadedon dates from laacasenotes_20241018
+    -- Aggregate maximum loadedon dates from laacasenotes_20241203
     max_casenotes AS (
         SELECT 
             caseid, 
             MAX(loadedon) AS max_loadedon_casenotes
         FROM 
-            marston.laacasenotes_20241018
+            marston.laacasenotes_20241203
         GROUP BY 
             caseid
     ),
     
-    -- Aggregate maximum loadedon dates from laacasehistory_20241018
+    -- Aggregate maximum loadedon dates from laacasehistory_20241203
     max_casehistory AS (
         SELECT 
             caseid, 
             MAX(loadedon) AS max_loadedon_casehistory
         FROM 
-            marston.laacasehistory_20241018
+            marston.laacasehistory_20241203
         GROUP BY 
             caseid
     )
@@ -44,7 +44,7 @@ SELECT
     SUM(CASE WHEN incomesanctionapplied IS NULL OR incomesanctionapplied = 'NULL' THEN 1 ELSE 0 END) AS incomesanctionapplied_nulls,
     SUM(CASE WHEN loadedon IS NULL OR loadedon = 'NULL' THEN 1 ELSE 0 END) AS loadedon_nulls,
     SUM(CASE WHEN loadedby IS NULL OR loadedby = 'NULL' THEN 1 ELSE 0 END) AS loadedby_nulls
-FROM marston.laacasedetails_20241018 a
+FROM marston.laacasedetails_20241203 a
 LEFT JOIN max_casenotes mn ON a.caseid = mn.caseid
 LEFT JOIN max_casehistory mh ON a.caseid = mh.caseid
 WHERE (openclosedstatus = 'OPEN'
@@ -60,7 +60,7 @@ SELECT
     MIN(caseclosuredate) AS min_caseclosuredate, MAX(caseclosuredate) AS max_caseclosuredate,
     MIN(sentenceorderdate) AS min_sentenceorderdate, MAX(sentenceorderdate) AS max_sentenceorderdate,
     MIN(loadedon) AS min_loadedon, MAX(loadedon) AS max_loadedon
-FROM marston.laacasedetails_20241018
+FROM marston.laacasedetails_20241203
 WHERE statusdate IS NOT NULL AND statusdate <> 'NULL'
   AND caseclosuredate IS NOT NULL AND caseclosuredate <> 'NULL'
   AND sentenceorderdate IS NOT NULL AND sentenceorderdate <> 'NULL'
@@ -72,7 +72,7 @@ SELECT
     MAX(CAST(totalenforcementcharges AS NUMERIC)) AS max_totalenforcementcharges,
     SUM(CASE WHEN totalenforcementcharges IS NULL OR totalenforcementcharges = 'NULL' THEN 1 ELSE 0 END) AS totalenforcementcharges_nulls,
     COUNT(*) AS total_rows
-FROM marston.laacasedetails_20241018
+FROM marston.laacasedetails_20241203
 WHERE totalenforcementcharges ~ '^[0-9]+(\.[0-9]+)?$'  -- Matches valid numeric format;
 
 
@@ -85,7 +85,7 @@ SELECT
     SUM(CASE WHEN outstandingbalance IS NULL OR outstandingbalance = 'NULL' THEN 1 ELSE 0 END) AS outstandingbalance_nulls,
     SUM(CASE WHEN originalbalance IS NULL OR originalbalance = 'NULL' THEN 1 ELSE 0 END) AS originalbalance_nulls,
     SUM(CASE WHEN originalbalancedate IS NULL OR originalbalancedate = 'NULL' THEN 1 ELSE 0 END) AS originalbalancedate_nulls
-FROM marston.laacasebalance_20241018
+FROM marston.laacasebalance_20241203
 where json_footer is null;
 
 
@@ -93,7 +93,7 @@ where json_footer is null;
 SELECT 
     MIN(originalbalancedate) AS min_originalbalancedate, 
     MAX(originalbalancedate) AS max_originalbalancedate
-FROM marston.laacasebalance_20241018
+FROM marston.laacasebalance_20241203
 WHERE originalbalancedate IS NOT NULL AND originalbalancedate <> 'NULL'
 and json_footer is null;
 
@@ -104,7 +104,7 @@ SELECT
     MAX(CAST(outstandingbalance AS NUMERIC)) AS max_outstandingbalance,
     MIN(CAST(originalbalance AS NUMERIC)) AS min_originalbalance,
     MAX(CAST(originalbalance AS NUMERIC)) AS max_originalbalance
-    FROM marston.laacasebalance_20241018
+    FROM marston.laacasebalance_20241203
 WHERE outstandingbalance ~ '^[0-9]+(\.[0-9]+)?$'  -- Matches valid numeric format
   AND originalbalance ~ '^[0-9]+(\.[0-9]+)?$'
   and json_footer is null;
@@ -129,7 +129,7 @@ SELECT count(*) as totalrows,
     SUM(CASE WHEN transactionfee IS NULL OR transactionfee = 'NULL' THEN 1 ELSE 0 END) AS transactionfee_nulls,
     SUM(CASE WHEN clientpaymentrunrecordid IS NULL OR clientpaymentrunrecordid = 'NULL' THEN 1 ELSE 0 END) AS clientpaymentrunrecordid_nulls,
     SUM(CASE WHEN loadedby IS NULL OR loadedby = 'NULL' THEN 1 ELSE 0 END) AS loadedby_nulls
-FROM marston.laacasepayments_20241018
+FROM marston.laacasepayments_20241203
 WHERE json_footer IS NULL;
 
 
@@ -149,7 +149,7 @@ SELECT
     
     MIN(CASE WHEN reverseddate IS NOT NULL AND reverseddate <> 'NULL' THEN reverseddate ELSE NULL END) AS min_reverseddate, 
     MAX(CASE WHEN reverseddate IS NOT NULL AND reverseddate <> 'NULL' THEN reverseddate ELSE NULL END) AS max_reverseddate
-FROM marston.laacasepayments_20241018
+FROM marston.laacasepayments_20241203
 WHERE json_footer IS NULL;
 
 
@@ -159,7 +159,7 @@ SELECT
     MAX(CAST(amount AS NUMERIC)) AS max_amount,
     MIN(CAST(transactionfee AS NUMERIC)) AS min_transactionfee,
     MAX(CAST(transactionfee AS NUMERIC)) AS max_transactionfee
-FROM marston.laacasepayments_20241018
+FROM marston.laacasepayments_20241203
 WHERE json_footer IS NULL
   AND amount ~ '^[0-9]+(\.[0-9]+)?$'  -- Matches valid numeric format
   AND transactionfee ~ '^[0-9]+(\.[0-9]+)?$';
@@ -182,7 +182,7 @@ SELECT count(*) as totalrows,
     SUM(CASE WHEN refundtype IS NULL OR refundtype = 'NULL' THEN 1 ELSE 0 END) AS refundtype_nulls,
     SUM(CASE WHEN refundmethod IS NULL OR refundmethod = 'NULL' THEN 1 ELSE 0 END) AS refundmethod_nulls,
     SUM(CASE WHEN loadedby IS NULL OR loadedby = 'NULL' THEN 1 ELSE 0 END) AS loadedby_nulls
-FROM marston.laacaserefunds_20241018
+FROM marston.laacaserefunds_20241203
 WHERE json_footer IS NULL;
 
 
@@ -202,7 +202,7 @@ SELECT
     
     MIN(CASE WHEN completeddate IS NOT NULL AND completeddate <> 'NULL' THEN completeddate ELSE NULL END) AS min_completeddate, 
     MAX(CASE WHEN completeddate IS NOT NULL AND completeddate <> 'NULL' THEN completeddate ELSE NULL END) AS max_completeddate
-FROM marston.laacaserefunds_20241018
+FROM marston.laacaserefunds_20241203
 WHERE json_footer IS NULL;
 
 
@@ -211,7 +211,7 @@ SELECT
     MIN(CAST(amount AS NUMERIC)) AS min_amount,
     MAX(CAST(amount AS NUMERIC)) AS max_amount,
     SUM(CASE WHEN amount IS NULL OR amount = 'NULL' THEN 1 ELSE 0 END) AS amount_nulls
-FROM marston.laacaserefunds_20241018
+FROM marston.laacaserefunds_20241203
 WHERE json_footer IS NULL
   AND amount ~ '^[0-9]+(\.[0-9]+)?$';  -- Matches valid numeric format
 
@@ -229,7 +229,7 @@ SELECT count(*) numberofrows,
     SUM(CASE WHEN comment IS NULL OR comment = 'NULL' THEN 1 ELSE 0 END) AS comment_nulls,
     SUM(CASE WHEN fromstatus IS NULL OR fromstatus = 'NULL' THEN 1 ELSE 0 END) AS fromstatus_nulls,
     SUM(CASE WHEN tostatus IS NULL OR tostatus = 'NULL' THEN 1 ELSE 0 END) AS tostatus_nulls
-FROM marston.laacasestatus_20241018
+FROM marston.laacasestatus_20241203
 WHERE json_footer IS NULL;
 
 
@@ -237,7 +237,7 @@ WHERE json_footer IS NULL;
 SELECT 
     MIN(CASE WHEN loadedon IS NOT NULL AND loadedon <> 'NULL' THEN loadedon ELSE NULL END) AS min_loadedon, 
     MAX(CASE WHEN loadedon IS NOT NULL AND loadedon <> 'NULL' THEN loadedon ELSE NULL END) AS max_loadedon
-FROM marston.laacasestatus_20241018
+FROM marston.laacasestatus_20241203
 WHERE json_footer IS NULL;
 
 
@@ -251,7 +251,7 @@ SELECT COUNT(*) TOTALNUMBEROFROWS,
     SUM(CASE WHEN loadedon IS NULL OR loadedon = 'NULL' THEN 1 ELSE 0 END) AS loadedon_nulls,
     SUM(CASE WHEN clientcasereference IS NULL OR clientcasereference = 'NULL' THEN 1 ELSE 0 END) AS clientcasereference_nulls,
     SUM(CASE WHEN previouscasereference IS NULL OR previouscasereference = 'NULL' THEN 1 ELSE 0 END) AS previouscasereference_nulls
-FROM marston.laacases_20241018
+FROM marston.laacases_20241203
 WHERE json_footer IS NULL;
 
 
@@ -260,7 +260,7 @@ WHERE json_footer IS NULL;
 SELECT 
     MIN(CASE WHEN loadedon IS NOT NULL AND loadedon <> 'NULL' THEN loadedon ELSE NULL END) AS min_loadedon, 
     MAX(CASE WHEN loadedon IS NOT NULL AND loadedon <> 'NULL' THEN loadedon ELSE NULL END) AS max_loadedon
-FROM marston.laacases_20241018
+FROM marston.laacases_20241203
 WHERE json_footer IS NULL;
 
 
@@ -277,7 +277,7 @@ SELECT COUNT(*) TOTALNUMBEROFROWS,
     SUM(CASE WHEN stage IS NULL OR stage = 'NULL' THEN 1 ELSE 0 END) AS stage_nulls,
     SUM(CASE WHEN loadedby IS NULL OR loadedby = 'NULL' THEN 1 ELSE 0 END) AS loadedby_nulls,
     SUM(CASE WHEN userid IS NULL OR userid = 'NULL' THEN 1 ELSE 0 END) AS userid_nulls
-FROM marston.laacaseworkflow_20241018
+FROM marston.laacaseworkflow_20241203
 WHERE json_footer IS NULL;
 
 
@@ -285,7 +285,7 @@ WHERE json_footer IS NULL;
 SELECT 
     MIN(CASE WHEN loadedon IS NOT NULL /*AND loadedon <> 'NULL' */THEN loadedon ELSE NULL END) AS min_loadedon, 
     MAX(CASE WHEN loadedon IS NOT NULL /*AND loadedon <> 'NULL' */ THEN loadedon ELSE NULL END) AS max_loadedon
-FROM marston.laacaseworkflow_20241018
+FROM marston.laacaseworkflow_20241203
 WHERE json_footer IS NULL;
 
 
@@ -305,7 +305,7 @@ SELECT COUNT(*) TOTALNUMBEROFROWS,
     SUM(CASE WHEN vat IS NULL OR vat = 'NULL' THEN 1 ELSE 0 END) AS vat_nulls,
     SUM(CASE WHEN paiddate IS NULL OR paiddate = 'NULL' THEN 1 ELSE 0 END) AS paiddate_nulls,
     SUM(CASE WHEN loadedby IS NULL OR loadedby = 'NULL' THEN 1 ELSE 0 END) AS loadedby_nulls
-FROM marston.laaclientpaymentruns_20241018
+FROM marston.laaclientpaymentruns_20241203
 WHERE json_footer IS NULL;
 
 
@@ -317,7 +317,7 @@ SELECT
     
     MIN(CASE WHEN paiddate IS NOT NULL AND paiddate <> 'NULL' THEN paiddate ELSE NULL END) AS min_paiddate, 
     MAX(CASE WHEN paiddate IS NOT NULL AND paiddate <> 'NULL' THEN paiddate ELSE NULL END) AS max_paiddate
-FROM marston.laaclientpaymentruns_20241018
+FROM marston.laaclientpaymentruns_20241203
 WHERE json_footer IS NULL;
 
 
@@ -332,7 +332,7 @@ SELECT COUNT(*) TOTALNUMBEROFROWS,
     SUM(CASE WHEN dob IS NULL OR dob = 'NULL' THEN 1 ELSE 0 END) AS dob_nulls,
     SUM(CASE WHEN nino IS NULL OR nino = 'NULL' THEN 1 ELSE 0 END) AS nino_nulls,
     SUM(CASE WHEN loadedon IS NULL OR loadedon = 'NULL' THEN 1 ELSE 0 END) AS loadedon_nulls
-FROM marston.laadefaulters_20241018
+FROM marston.laadefaulters_20241203
 WHERE json_footer IS NULL;
 
 
@@ -343,14 +343,14 @@ SELECT
     
     MIN(CASE WHEN loadedon IS NOT NULL AND loadedon <> 'NULL' THEN loadedon ELSE NULL END) AS min_loadedon, 
     MAX(CASE WHEN loadedon IS NOT NULL AND loadedon <> 'NULL' THEN loadedon ELSE NULL END) AS max_loadedon
-FROM marston.laadefaulters_20241018
+FROM marston.laadefaulters_20241203
 WHERE json_footer IS NULL;
 
 
 --- Valid NiNo Format
 SELECT b.clientcasereference as MAATRepId,nino
-FROM marston.laadefaulters_20241018 a
-inner join marston.laacasedetails_20241018 b on b.caseid = a.caseid
+FROM marston.laadefaulters_20241203 a
+inner join marston.laacasedetails_20241203 b on b.caseid = a.caseid
 WHERE a.json_footer IS NULL
   AND (nino IS NOT NULL AND nino <> 'NULL')
   AND nino !~ '^(?!BG)(?!GB)(?!NK)(?!KN)(?!TN)(?!NT)(?!ZZ)(?:[A-CEGHJ-PR-TW-Z][A-CEGHJ-NPR-TW-Z])(?:\s*\d\s*){6}([A-D]|\s)$';  -- Valid NINO format
@@ -377,7 +377,7 @@ SELECT COUNT(*) TOTALNUMBEROFROWS,
     SUM(CASE WHEN isprimarycontactaddress IS NULL OR isprimarycontactaddress = 'NULL' THEN 1 ELSE 0 END) AS isprimarycontactaddress_nulls,
     SUM(CASE WHEN isaddressconfirmed IS NULL OR isaddressconfirmed = 'NULL' THEN 1 ELSE 0 END) AS isaddressconfirmed_nulls,
     SUM(CASE WHEN source IS NULL OR source = 'NULL' THEN 1 ELSE 0 END) AS source_nulls
-FROM marston.laadefaulterscontactaddresses_20241018
+FROM marston.laadefaulterscontactaddresses_20241203
 WHERE json_footer IS NULL;
 
 
@@ -385,14 +385,14 @@ WHERE json_footer IS NULL;
 SELECT COUNT(*) TOTALNUMBEROFROWS, 
     MIN(CASE WHEN loadedon IS NOT NULL /*AND loadedon <> 'NULL' */ THEN loadedon ELSE NULL END) AS min_loadedon, 
     MAX(CASE WHEN loadedon IS NOT NULL /*AND loadedon <> 'NULL' */ THEN loadedon ELSE NULL END) AS max_loadedon
-FROM marston.laadefaulterscontactaddresses_20241018
+FROM marston.laadefaulterscontactaddresses_20241203
 WHERE json_footer IS NULL;
 
 
 ---- PostalCode format check
 SELECT a.caseid, b.clientcasereference,addresspc
-FROM marston.laadefaulterscontactaddresses_20241018 a
-inner join marston.laacasedetails_20241018 b on b.caseid = a.caseid
+FROM marston.laadefaulterscontactaddresses_20241203 a
+inner join marston.laacasedetails_20241203 b on b.caseid = a.caseid
 WHERE a.json_footer IS NULL
   AND (addresspc IS NOT NULL AND addresspc <> 'NULL')
   AND addresspc !~ '^[A-Z0-9]{1,4} [A-Z0-9]{1,3}$';  -- Basic UK postcode format
@@ -415,7 +415,7 @@ SELECT
     SUM(CASE WHEN isconsented IS NULL OR isconsented = 'NULL' THEN 1 ELSE 0 END) AS isconsented_nulls,
     SUM(CASE WHEN ispreferred IS NULL OR ispreferred = 'NULL' THEN 1 ELSE 0 END) AS ispreferred_nulls,
     SUM(CASE WHEN isrightpartyconfirmed IS NULL OR isrightpartyconfirmed = 'NULL' THEN 1 ELSE 0 END) AS isrightpartyconfirmed_nulls
-FROM marston.laadefaultersemails_20241018
+FROM marston.laadefaultersemails_20241203
 WHERE json_footer IS NULL;
 
 
@@ -423,13 +423,13 @@ WHERE json_footer IS NULL;
 SELECT 
     MIN(loadedon) AS min_loadedon, 
     MAX(loadedon) AS max_loadedon
-FROM marston.laadefaultersemails_20241018
+FROM marston.laadefaultersemails_20241203
 WHERE json_footer IS NULL;
 
 
 --- valid email format check
 SELECT caseid,email
-FROM marston.laadefaultersemails_20241018
+FROM marston.laadefaultersemails_20241203
 WHERE json_footer IS NULL
   AND email IS NOT NULL
   AND email !~ '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$';  -- Basic email format
@@ -450,7 +450,7 @@ SELECT
     SUM(CASE WHEN source IS NULL OR source = 'NULL' THEN 1 ELSE 0 END) AS source_nulls,
     SUM(CASE WHEN ispreferred IS NULL OR ispreferred = 'NULL' THEN 1 ELSE 0 END) AS ispreferred_nulls,
     SUM(CASE WHEN isrightpartyconfirmed IS NULL OR isrightpartyconfirmed = 'NULL' THEN 1 ELSE 0 END) AS isrightpartyconfirmed_nulls
-FROM marston.laadefaultersphones_20241018
+FROM marston.laadefaultersphones_20241203
 WHERE json_footer IS NULL;
 
 
@@ -459,13 +459,13 @@ WHERE json_footer IS NULL;
 SELECT 
     MIN(loadedon) AS min_loadedon, 
     MAX(loadedon) AS max_loadedon
-FROM marston.laadefaultersphones_20241018
+FROM marston.laadefaultersphones_20241203
 WHERE json_footer IS NULL;
 
 
 --- Valid Phone Number Format
 SELECT caseid,number
-FROM marston.laadefaultersphones_20241018
+FROM marston.laadefaultersphones_20241203
 WHERE json_footer IS NULL
   AND number IS NOT NULL
   AND number !~ '^[0-9+\-\s()]{7,15}$';  -- Basic phone number format
@@ -486,7 +486,7 @@ SELECT
     SUM(CASE WHEN welfarecategory IS NULL OR welfarecategory = 'NULL' THEN 1 ELSE 0 END) AS welfarecategory_nulls,
     SUM(CASE WHEN proofprovided IS NULL OR proofprovided = 'NULL' THEN 1 ELSE 0 END) AS proofprovided_nulls,
     SUM(CASE WHEN note IS NULL OR note = 'NULL' THEN 1 ELSE 0 END) AS note_nulls
-FROM marston.laadefaulterswelfare_20241018
+FROM marston.laadefaulterswelfare_20241203
 WHERE json_footer IS NULL;
 
 
@@ -494,7 +494,7 @@ WHERE json_footer IS NULL;
 SELECT 
     MIN(loadedon) AS min_loadedon, 
     MAX(loadedon) AS max_loadedon
-FROM marston.laadefaulterswelfare_20241018
+FROM marston.laadefaulterswelfare_20241203
 WHERE json_footer IS NULL;
 
 
@@ -512,7 +512,7 @@ SELECT
     SUM(CASE WHEN projectedcreditscore IS NULL OR projectedcreditscore = 'NULL' THEN 1 ELSE 0 END) AS projectedcreditscore_nulls,
     SUM(CASE WHEN isfoundcreditpositionconsistentwithdeclared IS NULL OR isfoundcreditpositionconsistentwithdeclared = 'NULL' THEN 1 ELSE 0 END) AS isfoundcreditpositionconsistentwithdeclared_nulls,
     SUM(CASE WHEN wasuploadedmanually IS NULL OR wasuploadedmanually = 'NULL' THEN 1 ELSE 0 END) AS wasuploadedmanually_nulls
-FROM marston.laalacescases_20241018
+FROM marston.laalacescases_20241203
 WHERE json_footer IS NULL;
 
 
@@ -520,30 +520,31 @@ WHERE json_footer IS NULL;
 SELECT 
     MIN(lastupdate) AS min_lastupdate, 
     MAX(lastupdate) AS max_lastupdate
-FROM marston.laalacescases_20241018
+FROM marston.laalacescases_20241203
 WHERE json_footer IS NULL;
 
 
 /********** LACESCASESACTIONS TABLE ******/
 -- NULL and 'NULL' Values Check
-SELECT TOTALNUMBEROFROWS
+SELECT 
     COUNT(*) AS TOTALNUMBEROFROWS,
     SUM(CASE WHEN batch_id IS NULL OR batch_id = 'NULL' THEN 1 ELSE 0 END) AS batch_id_nulls,
     SUM(CASE WHEN recordid IS NULL OR recordid = 'NULL' THEN 1 ELSE 0 END) AS recordid_nulls,
     SUM(CASE WHEN lacescaseid IS NULL OR lacescaseid = 'NULL' THEN 1 ELSE 0 END) AS lacescaseid_nulls,
-    SUM(CASE WHEN changedate IS NULL /*OR changedate = 'NULL' */  THEN 1 ELSE 0 END) AS changedate_nulls,
+    SUM(CASE WHEN changedate IS NULL THEN 1 ELSE 0 END) AS changedate_nulls,
     SUM(CASE WHEN actiontype IS NULL OR actiontype = 'NULL' THEN 1 ELSE 0 END) AS actiontype_nulls,
     SUM(CASE WHEN description IS NULL OR description = 'NULL' THEN 1 ELSE 0 END) AS description_nulls,
     SUM(CASE WHEN newstatus IS NULL OR newstatus = 'NULL' THEN 1 ELSE 0 END) AS newstatus_nulls
-FROM marston.laalacescasesactions_20241018
+FROM marston.laalacescasesactions_20241203
 WHERE json_footer IS NULL;
+
 
 
 -- Date Range Check for changedate
 SELECT 
     MIN(changedate) AS min_changedate, 
     MAX(changedate) AS max_changedate
-FROM marston.laalacescasesactions_20241018
+FROM marston.laalacescasesactions_20241203
 WHERE json_footer IS NULL;
 
 
@@ -571,7 +572,7 @@ SELECT
     SUM(CASE WHEN issufficientcapitalandequity IS NULL OR issufficientcapitalandequity = 'NULL' THEN 1 ELSE 0 END) AS issusufficientcapitalandequity_nulls,
     SUM(CASE WHEN casecap IS NULL OR casecap = 'NULL' THEN 1 ELSE 0 END) AS casecap_nulls,
     SUM(CASE WHEN equityverifieddate IS NULL OR equityverifieddate = 'NULL' THEN 1 ELSE 0 END) AS equityverifieddate_nulls
-FROM marston.laalacesdatawarehouse_20241018
+FROM marston.laalacesdatawarehouse_20241203
 WHERE json_footer IS NULL;
 
 
@@ -588,13 +589,13 @@ SELECT
     
     MIN(CASE WHEN equityverifieddate IS NOT NULL AND equityverifieddate <> 'NULL' THEN equityverifieddate END) AS min_equityverifieddate, 
     MAX(CASE WHEN equityverifieddate IS NOT NULL AND equityverifieddate <> 'NULL' THEN equityverifieddate END) AS max_equityverifieddate
-FROM marston.laalacesdatawarehouse_20241018
+FROM marston.laalacesdatawarehouse_20241203
 WHERE json_footer IS NULL;
 
 
 -- Valid Format Check for totalavailablecapitalassets (Check for numeric values)
 SELECT totalavailablecapitalassets
-FROM marston.laalacesdatawarehouse_20241018
+FROM marston.laalacesdatawarehouse_20241203
 WHERE json_footer IS NULL
   AND totalavailablecapitalassets IS NOT NULL and totalavailablecapitalassets <> 'NULL'
   AND totalavailablecapitalassets !~ '^[0-9]+(\.[0-9]+)?$';  -- Matches valid numeric format
@@ -610,13 +611,13 @@ SELECT
     
     MIN(CAST(casecap AS NUMERIC)) AS min_casecap, 
     MAX(CAST(casecap AS NUMERIC)) AS max_casecap
-FROM marston.laalacesdatawarehouse_20241018
+FROM marston.laalacesdatawarehouse_20241203
 WHERE json_footer IS NULL
   AND totalavailablecapitalassets ~ '^[0-9]+(\.[0-9]+)?$'  -- Ensures valid numeric format
   AND numberofavailablecapitalassets ~ '^[0-9]+(\.[0-9]+)?$'  -- Ensures valid numeric format
   AND casecap ~ '^[0-9]+(\.[0-9]+)?$';  -- Ensures valid numeric format
 
-/*************** laalacesexperianassociations_20241018 ******/
+/*************** laalacesexperianassociations_20241203 ******/
 -- NULL and 'NULL' Values Check
 SELECT 
     COUNT(*) AS TOTALNUMBEROFROWS,
@@ -625,20 +626,20 @@ SELECT
     SUM(CASE WHEN experianentriesrecordid IS NULL OR experianentriesrecordid = 'NULL' THEN 1 ELSE 0 END) AS experianentriesrecordid_nulls,
     SUM(CASE WHEN linkedname IS NULL OR linkedname = 'NULL' THEN 1 ELSE 0 END) AS linkedname_nulls,
     SUM(CASE WHEN isignored IS NULL OR isignored = 'NULL' THEN 1 ELSE 0 END) AS isignored_nulls
-FROM marston.laalacesexperianassociations_20241018
+FROM marston.laalacesexperianassociations_20241203
 WHERE json_footer IS NULL;
 
 
 -- Valid Format Check for linkedname (allows letters, spaces, hyphens, and apostrophes)
 SELECT linkedname
-FROM marston.laalacesexperianassociations_20241018
+FROM marston.laalacesexperianassociations_20241203
 WHERE json_footer IS NULL
   AND linkedname IS NOT NULL
   AND linkedname !~ '^[A-Za-z\s\''''\-]+$';  -- Allows letters, spaces, apostrophes, and hyphens
 
 -- Valid Format Check for isignored (Ensure boolean values are valid, assuming 'Y'/'N' or 'true'/'false')
 SELECT isignored
-FROM marston.laalacesexperianassociations_20241018
+FROM marston.laalacesexperianassociations_20241203
 WHERE json_footer IS NULL
   AND isignored NOT IN ('1', '0');  
 
@@ -662,7 +663,7 @@ SELECT
     SUM(CASE WHEN utdaccountscount IS NULL OR utdaccountscount = 'NULL' THEN 1 ELSE 0 END) AS utdaccountscount_nulls,
     SUM(CASE WHEN notutdaccountscount IS NULL OR notutdaccountscount = 'NULL' THEN 1 ELSE 0 END) AS notutdaccountscount_nulls,
     SUM(CASE WHEN bankaccountscount IS NULL OR bankaccountscount = 'NULL' THEN 1 ELSE 0 END) AS bankaccountscount_nulls
-FROM marston.laalacesexperianentries_20241018
+FROM marston.laalacesexperianentries_20241203
 WHERE json_footer IS NULL;
 
 
@@ -670,7 +671,7 @@ WHERE json_footer IS NULL;
 SELECT 
     MIN(CASE WHEN lastupdatedate IS NOT NULL  THEN lastupdatedate END) AS min_lastupdate, 
     MAX(CASE WHEN lastupdatedate IS NOT NULL  THEN lastupdatedate END) AS max_lastupdate
-FROM marston.laalacesexperianentries_20241018
+FROM marston.laalacesexperianentries_20241203
 WHERE json_footer IS NULL;
 
 -- Numeric Range Check for yearsatcurrentaddress, monthsatcurrentaddress, residencyscore, propensitytopayscore, utdaccountscount, notutdaccountscount, and bankaccountscount
@@ -695,7 +696,7 @@ SELECT
 
     MIN(CAST(bankaccountscount AS NUMERIC)) AS min_bankaccountscount, 
     MAX(CAST(bankaccountscount AS NUMERIC)) AS max_bankaccountscount
-FROM marston.laalacesexperianentries_20241018
+FROM marston.laalacesexperianentries_20241203
 WHERE json_footer IS NULL
   AND yearsatcurrentaddress ~ '^[0-9]+(\.[0-9]+)?$'  -- Ensure valid numeric format
   AND monthsatcurrentaddress ~ '^[0-9]+(\.[0-9]+)?$'
@@ -707,7 +708,7 @@ WHERE json_footer IS NULL
 
 
 
-  /*********** laalacesexperianmortgageentries_20241018.  *******/
+  /*********** laalacesexperianmortgageentries_20241203.  *******/
 -- NULL and 'NULL' Values Check
 SELECT 
     COUNT(*) AS TOTALNUMBEROFROWS,
@@ -716,19 +717,19 @@ SELECT
     SUM(CASE WHEN mortgage IS NULL OR mortgage = 'NULL' THEN 1 ELSE 0 END) AS mortgage_nulls,
     SUM(CASE WHEN experianentryid IS NULL OR experianentryid = 'NULL' THEN 1 ELSE 0 END) AS experianentryid_nulls,
     SUM(CASE WHEN propertyid IS NULL OR propertyid = 'NULL' THEN 1 ELSE 0 END) AS propertyid_nulls
-FROM marston.laalacesexperianmortgageentries_20241018
+FROM marston.laalacesexperianmortgageentries_20241203
 WHERE json_footer IS NULL;
 
 -- Valid Format Check for mortgage (Check if mortgage is a valid numeric field)
 SELECT mortgage
-FROM marston.laalacesexperianmortgageentries_20241018
+FROM marston.laalacesexperianmortgageentries_20241203
 WHERE json_footer IS NULL
   AND mortgage IS NOT NULL
   AND mortgage !~ '^[0-9]+(\.[0-9]+)?$';  -- Only allows valid numeric format
 
 -- Valid Format Check for experianentryid and propertyid (Ensure these fields follow a valid alphanumeric format)
 SELECT experianentryid, propertyid
-FROM marston.laalacesexperianmortgageentries_20241018
+FROM marston.laalacesexperianmortgageentries_20241203
 WHERE json_footer IS NULL
   AND (experianentryid IS NOT NULL AND experianentryid !~ '^[A-Za-z0-9\-]+$')  -- Allows alphanumeric characters and hyphens
   OR (propertyid IS NOT NULL AND propertyid !~ '^[A-Za-z0-9\-]+$');  -- Allows alphanumeric characters and hyphens
@@ -738,7 +739,7 @@ WHERE json_footer IS NULL
 SELECT 
     MIN(CAST(mortgage AS NUMERIC)) AS min_mortgage, 
     MAX(CAST(mortgage AS NUMERIC)) AS max_mortgage
-FROM marston.laalacesexperianmortgageentries_20241018
+FROM marston.laalacesexperianmortgageentries_20241203
 WHERE json_footer IS NULL
   AND mortgage ~ '^[0-9]+(\.[0-9]+)?$'  -- Ensure valid numeric format
   AND CAST(mortgage AS NUMERIC) BETWEEN 0 AND 10000000;  -- Modify range as needed
@@ -754,13 +755,13 @@ SELECT
     SUM(CASE WHEN landregistryentryid IS NULL /*OR landregistryentryid = 'NULL' */ THEN 1 ELSE 0 END) AS landregistryentryid_nulls,
     SUM(CASE WHEN proprietor IS NULL OR proprietor = 'NULL' THEN 1 ELSE 0 END) AS proprietor_nulls,
     SUM(CASE WHEN isignored IS NULL OR isignored = 'NULL' THEN 1 ELSE 0 END) AS isignored_nulls
-FROM marston.laalaceslandregistryassociations_20241018
+FROM marston.laalaceslandregistryassociations_20241203
 WHERE json_footer IS NULL;
 
 
 -- Format Check for proprietor (allows letters, spaces, apostrophes, hyphens, parentheses, ampersands, and numbers)
 SELECT proprietor
-FROM marston.laalaceslandregistryassociations_20241018
+FROM marston.laalaceslandregistryassociations_20241203
 WHERE json_footer IS NULL
   AND proprietor IS NOT NULL
   AND proprietor !~ '^[A-Za-z0-9 \''''\-&().]+$';  -- Allows letters, numbers, spaces, apostrophes, hyphens, parentheses, and ampersands
@@ -768,20 +769,20 @@ WHERE json_footer IS NULL
 
 -- Format Check for landregistryentryid (Allows alphanumeric characters and hyphens)
 SELECT landregistryentryid
-FROM marston.laalaceslandregistryassociations_20241018
+FROM marston.laalaceslandregistryassociations_20241203
 WHERE json_footer IS NULL
   AND landregistryentryid IS NOT NULL
   AND CAST(landregistryentryid AS TEXT) !~ '^[A-Za-z0-9\-]+$';  -- Allows alphanumeric characters and hyphens
 
 -- Boolean Check for isignored (Ensure isignored contains valid boolean values, assuming 'Y'/'N' or 'true'/'false')
 SELECT isignored
-FROM marston.laalaceslandregistryassociations_20241018
+FROM marston.laalaceslandregistryassociations_20241203
 WHERE json_footer IS NULL
   AND isignored NOT IN ('1', '0');  
 
 
 
-/********** laalaceslandregistryentries_20241018 **********/
+/********** laalaceslandregistryentries_20241203 **********/
 -- NULL and 'NULL' Values Check
 SELECT 
     COUNT(*) AS TOTALNUMBEROFROWS,
@@ -790,7 +791,7 @@ SELECT
     SUM(CASE WHEN propertyid IS NULL /*OR propertyid = 'NULL'*/ THEN 1 ELSE 0 END) AS propertyid_nulls,
     SUM(CASE WHEN lastupdatedate IS NULL OR lastupdatedate = 'NULL' THEN 1 ELSE 0 END) AS lastupdatedate_nulls,
     SUM(CASE WHEN namematchresult IS NULL OR namematchresult = 'NULL' THEN 1 ELSE 0 END) AS namematchresult_nulls
-FROM marston.laalaceslandregistryentries_20241018
+FROM marston.laalaceslandregistryentries_20241203
 WHERE json_footer IS NULL;
 
 
@@ -798,12 +799,12 @@ WHERE json_footer IS NULL;
 SELECT 
     MIN(CASE WHEN lastupdatedate IS NOT NULL AND lastupdatedate <> 'NULL' THEN lastupdatedate END) AS min_lastupdatedate, 
     MAX(CASE WHEN lastupdatedate IS NOT NULL AND lastupdatedate <> 'NULL' THEN lastupdatedate END) AS max_lastupdatedate
-FROM marston.laalaceslandregistryentries_20241018
+FROM marston.laalaceslandregistryentries_20241203
 WHERE json_footer IS NULL;
 
 -- Format Check for propertyid (Alphanumeric format check)
 SELECT propertyid
-FROM marston.laalaceslandregistryentries_20241018
+FROM marston.laalaceslandregistryentries_20241203
 WHERE json_footer IS NULL
   AND propertyid IS NOT NULL
   AND CAST(propertyid AS TEXT) !~ '^[A-Za-z0-9\-]+$';  -- Allows alphanumeric characters and hyphens
@@ -827,14 +828,14 @@ SELECT
     SUM(CASE WHEN percentageownedpartner IS NULL OR percentageownedpartner = 'NULL' THEN 1 ELSE 0 END) AS percentageownedpartner_nulls,
     SUM(CASE WHEN addressline1 IS NULL OR addressline1 = 'NULL' THEN 1 ELSE 0 END) AS addressline1_nulls,
     SUM(CASE WHEN postcode IS NULL OR postcode = 'NULL' THEN 1 ELSE 0 END) AS postcode_nulls
-FROM marston.laalacesproperties_20241018
+FROM marston.laalacesproperties_20241203
 WHERE json_footer IS NULL;
 
 -- Date Range Check for verifieddate -- obs27
 SELECT 
     MIN(CASE WHEN verifieddate IS NOT NULL AND verifieddate <> 'NULL' THEN verifieddate END) AS min_verifieddate, 
     MAX(CASE WHEN verifieddate IS NOT NULL AND verifieddate <> 'NULL' THEN verifieddate END) AS max_verifieddate
-FROM marston.laalacesproperties_20241018
+FROM marston.laalacesproperties_20241203
 WHERE json_footer IS NULL;
 
 -- Numeric Range Check for declaredvalue, declaredmortgage, verifiedvalue, verifiedmortgage, percentageownedapplicant, percentageownedpartner
@@ -856,7 +857,7 @@ SELECT
 
     MIN(CAST(percentageownedpartner AS NUMERIC)) AS min_percentageownedpartner, 
     MAX(CAST(percentageownedpartner AS NUMERIC)) AS max_percentageownedpartner
-FROM marston.laalacesproperties_20241018
+FROM marston.laalacesproperties_20241203
 WHERE json_footer IS NULL
   AND declaredvalue ~ '^[0-9]+(\.[0-9]+)?$'  -- Valid numeric format check
   AND declaredmortgage ~ '^[0-9]+(\.[0-9]+)?$'
@@ -867,7 +868,7 @@ WHERE json_footer IS NULL
 
 -- Address Format Check (Check if address lines follow a valid format)
 SELECT addressline1, addressline2, addressline3, postcode
-FROM marston.laalacesproperties_20241018
+FROM marston.laalacesproperties_20241203
 WHERE json_footer IS NULL
   AND (
     addressline1 IS NOT NULL AND addressline1 !~ '^[A-Za-z0-9. \&/():'''',\-]+$'  -- Allows letters, numbers, spaces, apostrophes, commas, hyphens
@@ -888,14 +889,14 @@ SELECT
     SUM(CASE WHEN name IS NULL OR name = 'NULL' THEN 1 ELSE 0 END) AS name_nulls,
     SUM(CASE WHEN value IS NULL OR value = 'NULL' THEN 1 ELSE 0 END) AS value_nulls,
     SUM(CASE WHEN loadedon IS NULL /*OR loadedon = 'NULL'*/ THEN 1 ELSE 0 END) AS loadedon_nulls
-FROM marston.laacaseadditionaldata_20241018
+FROM marston.laacaseadditionaldata_20241203
 WHERE json_footer IS NULL;
 
 -- Date Range Check for loadedon
 SELECT 
     MIN(CASE WHEN loadedon IS NOT NULL /*AND loadedon <> 'NULL'*/ THEN loadedon END) AS min_loadedon, 
     MAX(CASE WHEN loadedon IS NOT NULL /*AND loadedon <> 'NULL' */ THEN loadedon END) AS max_loadedon
-FROM marston.laacaseadditionaldata_20241018
+FROM marston.laacaseadditionaldata_20241203
 WHERE json_footer IS NULL;
 
 
@@ -917,7 +918,7 @@ SELECT
     SUM(CASE WHEN status IS NULL OR status = 'NULL' THEN 1 ELSE 0 END) AS status_nulls,
     SUM(CASE WHEN statusdate IS NULL OR statusdate = 'NULL' THEN 1 ELSE 0 END) AS statusdate_nulls,
     SUM(CASE WHEN loadedby IS NULL OR loadedby = 'NULL' THEN 1 ELSE 0 END) AS loadedby_nulls
-FROM marston.laacasearrangements_20241018
+FROM marston.laacasearrangements_20241203
 WHERE json_footer IS NULL;
 
 -- Date Range Check for setupdate, firstinstalmentdate, and statusdate
@@ -928,7 +929,7 @@ SELECT
     MAX(CASE WHEN firstinstalmentdate IS NOT NULL AND firstinstalmentdate <> 'NULL' THEN firstinstalmentdate END) AS max_firstinstalmentdate,
     MIN(CASE WHEN statusdate IS NOT NULL AND statusdate <> 'NULL' THEN statusdate END) AS min_statusdate, 
     MAX(CASE WHEN statusdate IS NOT NULL AND statusdate <> 'NULL' THEN statusdate END) AS max_statusdate
-FROM marston.laacasearrangements_20241018
+FROM marston.laacasearrangements_20241203
 WHERE json_footer IS NULL;
 
 -- Numeric Range Check for amounts and number of instalments
@@ -939,12 +940,12 @@ SELECT
     MAX(CAST(subsequentinstalmentamounts AS numeric)) AS max_subsequentinstalmentamounts,
     MIN(CAST(numberofinstalments AS numeric)) AS min_numberofinstalments, 
     MAX(CAST(numberofinstalments AS numeric)) AS max_numberofinstalments
-FROM marston.laacasearrangements_20241018
+FROM marston.laacasearrangements_20241203
 WHERE json_footer IS NULL;
 
 -- Format Check for status and arrangementreference
 SELECT status, arrangementreference
-FROM marston.laacasearrangements_20241018
+FROM marston.laacasearrangements_20241203
 WHERE json_footer IS NULL
   AND (
     status IS NOT NULL AND status !~ '^[A-Za-z0-9.&/():'' \-]+$'  -- Allows letters, numbers, spaces, apostrophes, ampersands, parentheses, hyphens, and periods
@@ -952,8 +953,9 @@ WHERE json_footer IS NULL
   );
 
 
-/********** laacaseassignments_20241018 ***********/
+/********** laacaseassignments_20241203 ***********/
 -- NULL and 'NULL' Values Check
+-- This is now excluded from migration scope, no need to check
 SELECT 
     COUNT(*) AS TOTALNUMBEROFROWS,
     SUM(CASE WHEN batch_id IS NULL OR batch_id = 'NULL' THEN 1 ELSE 0 END) AS batch_id_nulls,
@@ -964,14 +966,14 @@ SELECT
     SUM(CASE WHEN comment IS NULL OR comment = 'NULL' THEN 1 ELSE 0 END) AS comment_nulls,
     SUM(CASE WHEN action IS NULL OR action = 'NULL' THEN 1 ELSE 0 END) AS action_nulls,
     SUM(CASE WHEN loadedby IS NULL OR loadedby = 'NULL' THEN 1 ELSE 0 END) AS loadedby_nulls
-FROM marston.laacaseassignments_20241018
+FROM marston.laacaseassignments_20241203
 WHERE json_footer IS NULL;
 
 -- Date Range Check for loadedon
 SELECT 
     MIN(CASE WHEN loadedon IS NOT NULL THEN loadedon END) AS min_loadedon, 
     MAX(CASE WHEN loadedon IS NOT NULL  THEN loadedon END) AS max_loadedon
-FROM marston.laacaseassignments_20241018
+FROM marston.laacaseassignments_20241203
 WHERE json_footer IS NULL;
 
 
@@ -1014,14 +1016,14 @@ SELECT
     SUM(CASE WHEN comment IS NULL OR comment = 'NULL' THEN 1 ELSE 0 END) AS comment_nulls,
     SUM(CASE WHEN notetype IS NULL OR notetype = 'NULL' THEN 1 ELSE 0 END) AS notetype_nulls,
     SUM(CASE WHEN loadedby IS NULL OR loadedby = 'NULL' THEN 1 ELSE 0 END) AS loadedby_nulls
-FROM marston.laacasehistory_20241018
+FROM marston.laacasehistory_20241203
 WHERE json_footer IS NULL;
 
 -- Date Range Check for loadedon
 SELECT 
     MIN(CASE WHEN loadedon IS NOT NULL  THEN loadedon END) AS min_loadedon, 
     MAX(CASE WHEN loadedon IS NOT NULL  THEN loadedon END) AS max_loadedon
-FROM marston.laacasehistory_20241018
+FROM marston.laacasehistory_20241203
 WHERE json_footer IS NULL;
 
 
@@ -1044,7 +1046,7 @@ SELECT
     SUM(CASE WHEN chargereverseddate IS NULL OR chargereverseddate = 'NULL' THEN 1 ELSE 0 END) AS chargereverseddate_nulls,
     SUM(CASE WHEN paidamount IS NULL OR paidamount = 'NULL' THEN 1 ELSE 0 END) AS paidamount_nulls,
     SUM(CASE WHEN loadedby IS NULL OR loadedby = 'NULL' THEN 1 ELSE 0 END) AS loadedby_nulls
-FROM marston.laacasecharges_20241018
+FROM marston.laacasecharges_20241203
 WHERE json_footer IS NULL;
 
 -- Date Range Check for chargedate and chargereverseddate
@@ -1053,7 +1055,7 @@ SELECT
     MAX(CASE WHEN chargedate IS NOT NULL THEN chargedate END) AS max_chargedate,
     MIN(CASE WHEN chargereverseddate IS NOT NULL AND chargereverseddate <> 'NULL' THEN chargereverseddate END) AS min_chargereverseddate, 
     MAX(CASE WHEN chargereverseddate IS NOT NULL AND chargereverseddate <> 'NULL' THEN chargereverseddate END) AS max_chargereverseddate
-FROM marston.laacasecharges_20241018
+FROM marston.laacasecharges_20241203
 WHERE json_footer IS NULL;
 
 -- Numeric Range Check for chargeamount, vatamount, and paidamount
@@ -1064,12 +1066,12 @@ SELECT
     MAX(CAST(vatamount AS numeric)) AS max_vatamount,
     MIN(CAST(paidamount AS numeric)) AS min_paidamount, 
     MAX(CAST(paidamount AS numeric)) AS max_paidamount
-FROM marston.laacasecharges_20241018
+FROM marston.laacasecharges_20241203
 WHERE json_footer IS NULL;
 
 -- Format Check for chargedescription and remitto
 SELECT chargedescription, remitto
-FROM marston.laacasecharges_20241018
+FROM marston.laacasecharges_20241203
 WHERE json_footer IS NULL
   AND (
     chargedescription IS NOT NULL AND chargedescription !~ '^[A-Za-z0-9.&/():'' \-]+$'  -- Allows letters, numbers, spaces, apostrophes, ampersands, parentheses, hyphens, and periods
@@ -1089,14 +1091,14 @@ SELECT
     SUM(CASE WHEN loadedon IS NULL THEN 1 ELSE 0 END) AS loadedon_nulls,
     SUM(CASE WHEN comment IS NULL OR comment = 'NULL' THEN 1 ELSE 0 END) AS comment_nulls,
     SUM(CASE WHEN actiontype IS NULL OR actiontype = 'NULL' THEN 1 ELSE 0 END) AS actiontype_nulls
-FROM marston.laacasecalllog_20241018
+FROM marston.laacasecalllog_20241203
 WHERE json_footer IS NULL;
 
 -- Date Range Check for loadedon
 SELECT 
     MIN(CASE WHEN loadedon IS NOT NULL THEN loadedon END) AS min_loadedon, 
     MAX(CASE WHEN loadedon IS NOT NULL THEN loadedon END) AS max_loadedon
-FROM marston.laacasecalllog_20241018
+FROM marston.laacasecalllog_20241203
 WHERE json_footer IS NULL;
 
 
@@ -1113,7 +1115,7 @@ SELECT
     SUM(CASE WHEN holdreason IS NULL OR holdreason = 'NULL' THEN 1 ELSE 0 END) AS holdreason_nulls,
     SUM(CASE WHEN recommencedon IS NULL OR recommencedon = 'NULL' THEN 1 ELSE 0 END) AS recommencedon_nulls,
     SUM(CASE WHEN recommencereason IS NULL OR recommencereason = 'NULL' THEN 1 ELSE 0 END) AS recommencereason_nulls
-FROM marston.laacaseholds_20241018
+FROM marston.laacaseholds_20241203
 WHERE json_footer IS NULL;
 
 -- Date Range Check for holddate, holduntildate, and recommencedon
@@ -1124,12 +1126,12 @@ SELECT
     MAX(CASE WHEN holduntildate IS NOT NULL AND holduntildate <> 'NULL' THEN holduntildate END) AS max_holduntildate,
     MIN(CASE WHEN recommencedon IS NOT NULL AND recommencedon <> 'NULL' THEN recommencedon END) AS min_recommencedon, 
     MAX(CASE WHEN recommencedon IS NOT NULL AND recommencedon <> 'NULL' THEN recommencedon END) AS max_recommencedon
-FROM marston.laacaseholds_20241018
+FROM marston.laacaseholds_20241203
 WHERE json_footer IS NULL;
 
 -- Format Check for holdreason and recommencereason
 SELECT holdreason, recommencereason
-FROM marston.laacaseholds_20241018
+FROM marston.laacaseholds_20241203
 WHERE json_footer IS NULL
   AND (
     holdreason IS NOT NULL AND holdreason !~ '^[A-Za-z0-9.&/():'' \-]+$'  -- Allows letters, numbers, spaces, apostrophes, ampersands, parentheses, hyphens, and periods
@@ -1149,19 +1151,19 @@ SELECT
     SUM(CASE WHEN comment IS NULL OR comment = 'NULL' THEN 1 ELSE 0 END) AS comment_nulls,
     SUM(CASE WHEN notetype IS NULL OR notetype = 'NULL' THEN 1 ELSE 0 END) AS notetype_nulls,
     SUM(CASE WHEN loadedby IS NULL OR loadedby = 'NULL' THEN 1 ELSE 0 END) AS loadedby_nulls
-FROM marston.laacasenotes_20241018
+FROM marston.laacasenotes_20241203
 WHERE json_footer IS NULL;
 
 -- Date Range Check for loadedon
 SELECT 
     MIN(CASE WHEN loadedon IS NOT NULL THEN loadedon END) AS min_loadedon, 
     MAX(CASE WHEN loadedon IS NOT NULL THEN loadedon END) AS max_loadedon
-FROM marston.laacasenotes_20241018
+FROM marston.laacasenotes_20241203
 WHERE json_footer IS NULL;
 
 -- Format Check for comment and notetype
 SELECT comment, notetype
-FROM marston.laacasenotes_20241018
+FROM marston.laacasenotes_20241203
 WHERE json_footer IS NULL
   AND (
     comment IS NOT NULL AND comment !~ '^[A-Za-z0-9.&/():'' \-]+$'  -- Allows letters, numbers, spaces, apostrophes, ampersands, parentheses, hyphens, and periods
@@ -1183,19 +1185,19 @@ SELECT
     SUM(CASE WHEN linkedcasenumber IS NULL OR linkedcasenumber = 'NULL' THEN 1 ELSE 0 END) AS linkedcasenumber_nulls,
     SUM(CASE WHEN loadedon IS NULL THEN 1 ELSE 0 END) AS loadedon_nulls,
     SUM(CASE WHEN loadedby IS NULL OR loadedby = 'NULL' THEN 1 ELSE 0 END) AS loadedby_nulls
-FROM marston.laacaselinks_20241018
+FROM marston.laacaselinks_20241203
 WHERE json_footer IS NULL;
 
 -- Date Range Check for loadedon
 SELECT 
     MIN(CASE WHEN loadedon IS NOT NULL THEN loadedon END) AS min_loadedon, 
     MAX(CASE WHEN loadedon IS NOT NULL THEN loadedon END) AS max_loadedon
-FROM marston.laacaselinks_20241018
+FROM marston.laacaselinks_20241203
 WHERE json_footer IS NULL;
 
 -- Format Check for casenumber, linkedcasenumber
 SELECT casenumber, linkedcasenumber
-FROM marston.laacaselinks_20241018
+FROM marston.laacaselinks_20241203
 WHERE json_footer IS NULL
   AND (
     casenumber IS NOT NULL AND casenumber !~ '^[A-Za-z0-9.&/():'' \-]+$'  -- Allows letters, numbers, spaces, apostrophes, ampersands, parentheses, hyphens, and periods
@@ -1214,19 +1216,19 @@ SELECT
     SUM(CASE WHEN visitdate IS NULL THEN 1 ELSE 0 END) AS visitdate_nulls,
     SUM(CASE WHEN actionid IS NULL OR actionid = 'NULL' THEN 1 ELSE 0 END) AS actionid_nulls,
     SUM(CASE WHEN action IS NULL OR action = 'NULL' THEN 1 ELSE 0 END) AS action_nulls
-FROM marston.laacasevisits_20241018
+FROM marston.laacasevisits_20241203
 WHERE json_footer IS NULL;
 
 -- Date Range Check for visitdate
 SELECT 
     MIN(CASE WHEN visitdate IS NOT NULL  THEN visitdate END) AS min_visitdate, 
     MAX(CASE WHEN visitdate IS NOT NULL THEN visitdate END) AS max_visitdate
-FROM marston.laacasevisits_20241018
+FROM marston.laacasevisits_20241203
 WHERE json_footer IS NULL;
 
 -- Format Check for casenumber and action
 SELECT casenumber, action
-FROM marston.laacasevisits_20241018
+FROM marston.laacasevisits_20241203
 WHERE json_footer IS NULL
   AND (
     casenumber IS NOT NULL AND casenumber !~ '^[A-Za-z0-9.&/():'' \-]+$'  -- Allows letters, numbers, spaces, apostrophes, ampersands, parentheses, hyphens, and periods
