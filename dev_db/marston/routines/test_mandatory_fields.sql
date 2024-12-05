@@ -2,11 +2,11 @@
 DECLARE
     v_exists BOOLEAN;
 BEGIN
-    -- Check marston.laacases_20241018
-    RAISE NOTICE 'Checks for laacases_20241018 table has started';
+    -- Check marston.laacases_20241203
+    RAISE NOTICE 'Checks for laacases_20241203 table has started';
     EXECUTE '
         SELECT EXISTS (
-            SELECT 1 FROM marston.laacases_20241018
+            SELECT 1 FROM marston.laacases_20241203
             WHERE 
                 json_footer IS NULL AND (
                     caseid IS NULL OR caseid = ''NULL'' OR length(caseid) = 0 OR
@@ -18,14 +18,14 @@ BEGIN
     ' INTO v_exists;
 
     IF v_exists THEN
-        RAISE NOTICE 'ERROR: Null or empty values found on laacases_20241018 table';
+        RAISE NOTICE 'ERROR: Null or empty values found on laacases_20241203 table';
     END IF;
 
-    -- Check marston.laacasedetails_20241018
-    RAISE NOTICE 'Checks for laacasedetails_20241018 table has started';
+    -- Check marston.laacasedetails_20241203
+    RAISE NOTICE 'Checks for laacasedetails_20241203 table has started';
     EXECUTE '
         SELECT EXISTS (
-            SELECT 1 FROM marston.laacasedetails_20241018
+            SELECT 1 FROM marston.laacasedetails_20241203
             WHERE 
                 json_footer IS NULL AND (
                     caseid IS NULL OR caseid = ''NULL'' OR length(caseid) = 0 OR
@@ -44,14 +44,14 @@ BEGIN
     ' INTO v_exists;
 
     IF v_exists THEN
-        RAISE NOTICE 'ERROR: Null or empty values found on laacasedetails_20241018 table';
+        RAISE NOTICE 'ERROR: Null or empty values found on laacasedetails_20241203 table';
     END IF;
 
-    -- Check marston.laadefaulters_20241018
-    RAISE NOTICE 'Checks for laadefaulters_20241018 table has started';
+    -- Check marston.laadefaulters_20241203
+    RAISE NOTICE 'Checks for laadefaulters_20241203 table has started';
     EXECUTE '
         SELECT EXISTS (
-            SELECT 1 FROM marston.laadefaulters_20241018
+            SELECT 1 FROM marston.laadefaulters_20241203
             WHERE 
                 json_footer IS NULL AND (
                     caseid IS NULL OR caseid = ''NULL'' OR length(caseid) = 0 OR
@@ -64,14 +64,14 @@ BEGIN
     ' INTO v_exists;
 
     IF v_exists THEN
-        RAISE NOTICE 'ERROR: Null or empty values found on laadefaulters_20241018 table';
+        RAISE NOTICE 'ERROR: Null or empty values found on laadefaulters_20241203 table';
     END IF;
 
-    -- Check marston.laadefaultersphones_20241018
-    RAISE NOTICE 'Checks for laadefaultersphones_20241018 table has started';
+    -- Check marston.laadefaultersphones_20241203
+    RAISE NOTICE 'Checks for laadefaultersphones_20241203 table has started';
     EXECUTE '
         SELECT EXISTS (
-            SELECT 1 FROM marston.laadefaultersphones_20241018
+            SELECT 1 FROM marston.laadefaultersphones_20241203
             WHERE 
                 json_footer IS NULL AND (
                     caseid IS NULL OR caseid = ''NULL'' OR length(caseid) = 0 OR
@@ -85,14 +85,14 @@ BEGIN
     ' INTO v_exists;
 
     IF v_exists THEN
-        RAISE NOTICE 'ERROR: Null or empty values found on laadefaultersphones_20241018 table';
+        RAISE NOTICE 'ERROR: Null or empty values found on laadefaultersphones_20241203 table';
     END IF;
 
-    -- Check marston.laadefaultersemails_20241018
-    RAISE NOTICE 'Checks for laadefaultersemails_20241018 table has started';
+    -- Check marston.laadefaultersemails_20241203
+    RAISE NOTICE 'Checks for laadefaultersemails_20241203 table has started';
     EXECUTE '
         SELECT EXISTS (
-            SELECT 1 FROM marston.laadefaultersemails_20241018
+            SELECT 1 FROM marston.laadefaultersemails_20241203
             WHERE 
                 json_footer IS NULL AND (
                     caseid IS NULL OR caseid = ''NULL'' OR length(caseid) = 0 OR
@@ -107,14 +107,14 @@ BEGIN
     ' INTO v_exists;
 
     IF v_exists THEN
-        RAISE NOTICE 'ERROR: Null or empty values found on laadefaultersemails_20241018 table';
+        RAISE NOTICE 'ERROR: Null or empty values found on laadefaultersemails_20241203 table';
     END IF;
 
-    -- Check marston.laadefaulterscontactaddresses_20241018
-    RAISE NOTICE 'Checks for laadefaulterscontactaddresses_20241018 table has started';
+    -- Check marston.laadefaulterscontactaddresses_20241203
+    RAISE NOTICE 'Checks for laadefaulterscontactaddresses_20241203 table has started';
     EXECUTE '
         SELECT EXISTS (
-            SELECT 1 FROM marston.laadefaulterscontactaddresses_20241018
+            SELECT 1 FROM marston.laadefaulterscontactaddresses_20241203
             WHERE 
                 json_footer IS NULL AND (
                     caseid IS NULL OR caseid = ''NULL'' OR length(caseid) = 0 OR
@@ -126,14 +126,14 @@ BEGIN
     ' INTO v_exists;
 
     IF v_exists THEN
-        RAISE NOTICE 'ERROR: Null or empty values found on laadefaulterscontactaddresses_20241018 table';
+        RAISE NOTICE 'ERROR: Null or empty values found on laadefaulterscontactaddresses_20241203 table';
     END IF;
 
-    -- Check marston.laadefaultersphonesaudit_20241018
-    RAISE NOTICE 'Checks for laadefaultersphonesaudit_20241018 table has started';
+    -- Check marston.laadefaultersphonesaudit_20241203
+    RAISE NOTICE 'Checks for laadefaultersphonesaudit_20241203 table has started';
     EXECUTE '
         SELECT EXISTS (
-            SELECT 1 FROM marston.laadefaultersphonesaudit_20241018
+            SELECT 1 FROM marston.laadefaultersphonesaudit_20241203
             WHERE 
                 json_footer IS NULL AND (
                     caseid IS NULL OR caseid = ''NULL'' OR length(caseid) = 0 OR
@@ -148,14 +148,14 @@ BEGIN
     ' INTO v_exists;
 
     IF v_exists THEN
-        RAISE NOTICE 'ERROR: Null or empty values found on laadefaultersphonesaudit_20241018 table';
+        RAISE NOTICE 'ERROR: Null or empty values found on laadefaultersphonesaudit_20241203 table';
     END IF;
 
-    -- Check marston.laadefaultersemailsaudit_20241018
-    RAISE NOTICE 'Checks for laadefaultersemailsaudit_20241018 table has started';
+    -- Check marston.laadefaultersemailsaudit_20241203
+    RAISE NOTICE 'Checks for laadefaultersemailsaudit_20241203 table has started';
     EXECUTE '
         SELECT EXISTS (
-            SELECT 1 FROM marston.laadefaultersemailsaudit_20241018
+            SELECT 1 FROM marston.laadefaultersemailsaudit_20241203
             WHERE 
                 json_footer IS NULL AND (
                     caseid IS NULL OR caseid = ''NULL'' OR length(caseid) = 0 OR
@@ -170,14 +170,14 @@ BEGIN
     ' INTO v_exists;
 
     IF v_exists THEN
-        RAISE NOTICE 'ERROR: Null or empty values found on laadefaultersemailsaudit_20241018 table';
+        RAISE NOTICE 'ERROR: Null or empty values found on laadefaultersemailsaudit_20241203 table';
     END IF;
 
-    -- Check marston.laadefaulterscontactaddressesaudit_20241018
-    RAISE NOTICE 'Checks for laadefaulterscontactaddressesaudit_20241018 table has started';
+    -- Check marston.laadefaulterscontactaddressesaudit_20241203
+    RAISE NOTICE 'Checks for laadefaulterscontactaddressesaudit_20241203 table has started';
     EXECUTE '
         SELECT EXISTS (
-            SELECT 1 FROM marston.laadefaulterscontactaddressesaudit_20241018
+            SELECT 1 FROM marston.laadefaulterscontactaddressesaudit_20241203
             WHERE 
                 json_footer IS NULL AND (
                     caseid IS NULL OR caseid = ''NULL'' OR length(caseid) = 0 OR
@@ -193,14 +193,14 @@ BEGIN
     ' INTO v_exists;
 
     IF v_exists THEN
-        RAISE NOTICE 'ERROR: Null or empty values found on laadefaulterscontactaddressesaudit_20241018 table';
+        RAISE NOTICE 'ERROR: Null or empty values found on laadefaulterscontactaddressesaudit_20241203 table';
     END IF;
 
-    -- Check marston.laacasecharges_20241018
-    RAISE NOTICE 'Checks for laacasecharges_20241018 table has started';
+    -- Check marston.laacasecharges_20241203
+    RAISE NOTICE 'Checks for laacasecharges_20241203 table has started';
     EXECUTE '
         SELECT EXISTS (
-            SELECT 1 FROM marston.laacasecharges_20241018
+            SELECT 1 FROM marston.laacasecharges_20241203
             WHERE 
                 json_footer IS NULL AND (
                     caseid IS NULL OR caseid = ''NULL'' OR length(caseid) = 0 OR
@@ -215,14 +215,14 @@ BEGIN
     ' INTO v_exists;
 
     IF v_exists THEN
-        RAISE NOTICE 'ERROR: Null or empty values found on laacasecharges_20241018 table';
+        RAISE NOTICE 'ERROR: Null or empty values found on laacasecharges_20241203 table';
     END IF;
 
-    -- Check marston.laacasepayments_20241018
-    RAISE NOTICE 'Checks for laacasepayments_20241018 table has started';
+    -- Check marston.laacasepayments_20241203
+    RAISE NOTICE 'Checks for laacasepayments_20241203 table has started';
     EXECUTE '
         SELECT EXISTS (
-            SELECT 1 FROM marston.laacasepayments_20241018
+            SELECT 1 FROM marston.laacasepayments_20241203
             WHERE 
                 json_footer IS NULL AND (
                     caseid IS NULL OR caseid = ''NULL'' OR length(caseid) = 0 OR
@@ -236,14 +236,14 @@ BEGIN
     ' INTO v_exists;
 
     IF v_exists THEN
-        RAISE NOTICE 'ERROR: Null or empty values found on laacasepayments_20241018 table';
+        RAISE NOTICE 'ERROR: Null or empty values found on laacasepayments_20241203 table';
     END IF;
 
-    -- Check marston.laacaseassignments_20241018
-    RAISE NOTICE 'Checks for laacaseassignments_20241018 table has started';
+    -- Check marston.laacaseassignments_20241203
+    RAISE NOTICE 'Checks for laacaseassignments_20241203 table has started';
     EXECUTE '
         SELECT EXISTS (
-            SELECT 1 FROM marston.laacaseassignments_20241018
+            SELECT 1 FROM marston.laacaseassignments_20241203
             WHERE 
                 json_footer IS NULL AND (
                     caseid IS NULL OR caseid = ''NULL'' OR length(caseid) = 0 OR
@@ -257,14 +257,14 @@ BEGIN
     ' INTO v_exists;
 
     IF v_exists THEN
-        RAISE NOTICE 'ERROR: Null or empty values found on laacaseassignments_20241018 table';
+        RAISE NOTICE 'ERROR: Null or empty values found on laacaseassignments_20241203 table';
     END IF;
 
-    -- Check marston.laacaseholds_20241018
-    RAISE NOTICE 'Checks for laacaseholds_20241018 table has started';
+    -- Check marston.laacaseholds_20241203
+    RAISE NOTICE 'Checks for laacaseholds_20241203 table has started';
     EXECUTE '
         SELECT EXISTS (
-            SELECT 1 FROM marston.laacaseholds_20241018
+            SELECT 1 FROM marston.laacaseholds_20241203
             WHERE 
                 json_footer IS NULL AND (
                     caseid IS NULL OR caseid = ''NULL'' OR length(caseid) = 0 OR
@@ -277,14 +277,14 @@ BEGIN
     ' INTO v_exists;
 
     IF v_exists THEN
-        RAISE NOTICE 'ERROR: Null or empty values found on laacaseholds_20241018 table';
+        RAISE NOTICE 'ERROR: Null or empty values found on laacaseholds_20241203 table';
     END IF;
 
-    -- Check marston.laacasearrangements_20241018
-    RAISE NOTICE 'Checks for laacasearrangements_20241018 table has started';
+    -- Check marston.laacasearrangements_20241203
+    RAISE NOTICE 'Checks for laacasearrangements_20241203 table has started';
     EXECUTE '
         SELECT EXISTS (
-            SELECT 1 FROM marston.laacasearrangements_20241018
+            SELECT 1 FROM marston.laacasearrangements_20241203
             WHERE 
                 json_footer IS NULL AND (
                     caseid IS NULL OR caseid = ''NULL'' OR length(caseid) = 0 OR
@@ -301,14 +301,14 @@ BEGIN
     ' INTO v_exists;
 
     IF v_exists THEN
-        RAISE NOTICE 'ERROR: Null or empty values found on laacasearrangements_20241018 table';
+        RAISE NOTICE 'ERROR: Null or empty values found on laacasearrangements_20241203 table';
     END IF;
 
-    -- Check marston.laacasevisits_20241018
-    RAISE NOTICE 'Checks for laacasevisits_20241018 table has started';
+    -- Check marston.laacasevisits_20241203
+    RAISE NOTICE 'Checks for laacasevisits_20241203 table has started';
     EXECUTE '
         SELECT EXISTS (
-            SELECT 1 FROM marston.laacasevisits_20241018
+            SELECT 1 FROM marston.laacasevisits_20241203
             WHERE 
                 json_footer IS NULL AND (
                     caseid IS NULL OR caseid = ''NULL'' OR length(caseid) = 0 OR
@@ -322,14 +322,14 @@ BEGIN
     ' INTO v_exists;
 
     IF v_exists THEN
-        RAISE NOTICE 'ERROR: Null or empty values found on laacasevisits_20241018 table';
+        RAISE NOTICE 'ERROR: Null or empty values found on laacasevisits_20241203 table';
     END IF;
 
-    -- Check marston.laacaseadditionaldata_20241018
-    RAISE NOTICE 'Checks for laacaseadditionaldata_20241018 table has started';
+    -- Check marston.laacaseadditionaldata_20241203
+    RAISE NOTICE 'Checks for laacaseadditionaldata_20241203 table has started';
     EXECUTE '
         SELECT EXISTS (
-            SELECT 1 FROM marston.laacaseadditionaldata_20241018
+            SELECT 1 FROM marston.laacaseadditionaldata_20241203
             WHERE 
                 json_footer IS NULL AND (
                     caseid IS NULL OR caseid = ''NULL'' OR length(caseid) = 0 OR
@@ -342,14 +342,14 @@ BEGIN
     ' INTO v_exists;
 
     IF v_exists THEN
-        RAISE NOTICE 'ERROR: Null or empty values found on laacaseadditionaldata_20241018 table';
+        RAISE NOTICE 'ERROR: Null or empty values found on laacaseadditionaldata_20241203 table';
     END IF;
 
-    -- Check marston.laacaseattachments_20241018
-    RAISE NOTICE 'Checks for laacaseattachments_20241018 table has started';
+    -- Check marston.laacaseattachments_20241203
+    RAISE NOTICE 'Checks for laacaseattachments_20241203 table has started';
     EXECUTE '
         SELECT EXISTS (
-            SELECT 1 FROM marston.laacaseattachments_20241018
+            SELECT 1 FROM marston.laacaseattachments_20241203
             WHERE 
                 json_footer IS NULL AND (
                     caseid IS NULL OR caseid = ''NULL'' OR length(caseid) = 0 OR
@@ -363,14 +363,14 @@ BEGIN
     ' INTO v_exists;
 
     IF v_exists THEN
-        RAISE NOTICE 'ERROR: Null or empty values found on laacaseattachments_20241018 table';
+        RAISE NOTICE 'ERROR: Null or empty values found on laacaseattachments_20241203 table';
     END IF;
 
-    -- Check marston.laaclientpaymentruns_20241018
-    RAISE NOTICE 'Checks for laaclientpaymentruns_20241018 table has started';
+    -- Check marston.laaclientpaymentruns_20241203
+    RAISE NOTICE 'Checks for laaclientpaymentruns_20241203 table has started';
     EXECUTE '
         SELECT EXISTS (
-            SELECT 1 FROM marston.laaclientpaymentruns_20241018
+            SELECT 1 FROM marston.laaclientpaymentruns_20241203
             WHERE 
                 json_footer IS NULL AND (
                     caseid IS NULL OR caseid = ''NULL'' OR length(caseid) = 0 OR
@@ -383,14 +383,14 @@ BEGIN
     ' INTO v_exists;
 
     IF v_exists THEN
-        RAISE NOTICE 'ERROR: Null or empty values found on laaclientpaymentruns_20241018 table';
+        RAISE NOTICE 'ERROR: Null or empty values found on laaclientpaymentruns_20241203 table';
     END IF;
 
-    -- Check marston.laaclientinvoiceruns_20241018
-    RAISE NOTICE 'Checks for laaclientinvoiceruns_20241018 table has started';
+    -- Check marston.laaclientinvoiceruns_20241203
+    RAISE NOTICE 'Checks for laaclientinvoiceruns_20241203 table has started';
     EXECUTE '
         SELECT EXISTS (
-            SELECT 1 FROM marston.laaclientinvoiceruns_20241018
+            SELECT 1 FROM marston.laaclientinvoiceruns_20241203
             WHERE 
                 json_footer IS NULL AND (
                     caseid IS NULL OR caseid = ''NULL'' OR length(caseid) = 0 OR
@@ -404,14 +404,14 @@ BEGIN
     ' INTO v_exists;
 
     IF v_exists THEN
-        RAISE NOTICE 'ERROR: Null or empty values found on laaclientinvoiceruns_20241018 table';
+        RAISE NOTICE 'ERROR: Null or empty values found on laaclientinvoiceruns_20241203 table';
     END IF;
 
-    -- Check marston.laacaselinks_20241018
-    RAISE NOTICE 'Checks for laacaselinks_20241018 table has started';
+    -- Check marston.laacaselinks_20241203
+    RAISE NOTICE 'Checks for laacaselinks_20241203 table has started';
     EXECUTE '
         SELECT EXISTS (
-            SELECT 1 FROM marston.laacaselinks_20241018
+            SELECT 1 FROM marston.laacaselinks_20241203
             WHERE 
                 json_footer IS NULL AND (
                     caseid IS NULL OR caseid = ''NULL'' OR length(caseid) = 0 OR
@@ -423,14 +423,14 @@ BEGIN
     ' INTO v_exists;
 
     IF v_exists THEN
-        RAISE NOTICE 'ERROR: Null or empty values found on laacaselinks_20241018 table';
+        RAISE NOTICE 'ERROR: Null or empty values found on laacaselinks_20241203 table';
     END IF;
 
-    -- Check marston.laacasenotes_20241018
-    RAISE NOTICE 'Checks for laacasenotes_20241018 table has started';
+    -- Check marston.laacasenotes_20241203
+    RAISE NOTICE 'Checks for laacasenotes_20241203 table has started';
     EXECUTE '
         SELECT EXISTS (
-            SELECT 1 FROM marston.laacasenotes_20241018
+            SELECT 1 FROM marston.laacasenotes_20241203
             WHERE 
                 json_footer IS NULL AND (
                     caseid IS NULL OR caseid = ''NULL'' OR length(caseid) = 0 OR
@@ -442,14 +442,14 @@ BEGIN
     ' INTO v_exists;
 
     IF v_exists THEN
-        RAISE NOTICE 'ERROR: Null or empty values found on laacasenotes_20241018 table';
+        RAISE NOTICE 'ERROR: Null or empty values found on laacasenotes_20241203 table';
     END IF;
 
-    -- Check marston.laacasehistory_20241018
-    RAISE NOTICE 'Checks for laacasehistory_20241018 table has started';
+    -- Check marston.laacasehistory_20241203
+    RAISE NOTICE 'Checks for laacasehistory_20241203 table has started';
     EXECUTE '
         SELECT EXISTS (
-            SELECT 1 FROM marston.laacasehistory_20241018
+            SELECT 1 FROM marston.laacasehistory_20241203
             WHERE 
                 json_footer IS NULL AND (
                     caseid IS NULL OR caseid = ''NULL'' OR length(caseid) = 0 OR
@@ -461,14 +461,14 @@ BEGIN
     ' INTO v_exists;
 
     IF v_exists THEN
-        RAISE NOTICE 'ERROR: Null or empty values found on laacasehistory_20241018 table';
+        RAISE NOTICE 'ERROR: Null or empty values found on laacasehistory_20241203 table';
     END IF;
 
-    -- Check marston.laalacescases_20241018
-    RAISE NOTICE 'Checks for laalacescases_20241018 table has started';
+    -- Check marston.laalacescases_20241203
+    RAISE NOTICE 'Checks for laalacescases_20241203 table has started';
     EXECUTE '
         SELECT EXISTS (
-            SELECT 1 FROM marston.laalacescases_20241018
+            SELECT 1 FROM marston.laalacescases_20241203
             WHERE 
                 json_footer IS NULL AND (
                     lacescaseid IS NULL OR lacescaseid = ''NULL'' OR length(lacescaseid) = 0 OR
@@ -479,14 +479,14 @@ BEGIN
     ' INTO v_exists;
 
     IF v_exists THEN
-        RAISE NOTICE 'ERROR: Null or empty values found on laalacescases_20241018 table';
+        RAISE NOTICE 'ERROR: Null or empty values found on laalacescases_20241203 table';
     END IF;
 
-    -- Check marston.laalacesdatawarehouse_20241018
-    RAISE NOTICE 'Checks for laalacesdatawarehouse_20241018 table has started';
+    -- Check marston.laalacesdatawarehouse_20241203
+    RAISE NOTICE 'Checks for laalacesdatawarehouse_20241203 table has started';
     EXECUTE '
         SELECT EXISTS (
-            SELECT 1 FROM marston.laalacesdatawarehouse_20241018
+            SELECT 1 FROM marston.laalacesdatawarehouse_20241203
             WHERE 
                 json_footer IS NULL AND (
                     recordid IS NULL OR recordid = ''NULL'' OR length(recordid) = 0 OR
@@ -501,14 +501,14 @@ BEGIN
     ' INTO v_exists;
 
     IF v_exists THEN
-        RAISE NOTICE 'ERROR: Null or empty values found on laalacesdatawarehouse_20241018 table';
+        RAISE NOTICE 'ERROR: Null or empty values found on laalacesdatawarehouse_20241203 table';
     END IF;
 
-    -- Check marston.laalacesassignments_20241018
-    RAISE NOTICE 'Checks for laalacesassignments_20241018 table has started';
+    -- Check marston.laalacesassignments_20241203
+    RAISE NOTICE 'Checks for laalacesassignments_20241203 table has started';
     EXECUTE '
         SELECT EXISTS (
-            SELECT 1 FROM marston.laalacesassignments_20241018
+            SELECT 1 FROM marston.laalacesassignments_20241203
             WHERE 
                 json_footer IS NULL AND (
                     recordid IS NULL OR recordid = ''NULL'' OR length(recordid) = 0
@@ -517,14 +517,14 @@ BEGIN
     ' INTO v_exists;
 
     IF v_exists THEN
-        RAISE NOTICE 'ERROR: Null or empty values found on laalacesassignments_20241018 table';
+        RAISE NOTICE 'ERROR: Null or empty values found on laalacesassignments_20241203 table';
     END IF;
 
-    -- Check marston.laalacescasesactions_20241018
-    RAISE NOTICE 'Checks for laalacescasesactions_20241018 table has started';
+    -- Check marston.laalacescasesactions_20241203
+    RAISE NOTICE 'Checks for laalacescasesactions_20241203 table has started';
     EXECUTE '
         SELECT EXISTS (
-            SELECT 1 FROM marston.laalacescasesactions_20241018
+            SELECT 1 FROM marston.laalacescasesactions_20241203
             WHERE 
                 json_footer IS NULL AND (
                     recordid IS NULL OR recordid = ''NULL'' OR length(recordid) = 0 OR
@@ -538,14 +538,14 @@ BEGIN
     ' INTO v_exists;
 
     IF v_exists THEN
-        RAISE NOTICE 'ERROR: Null or empty values found on laalacescasesactions_20241018 table';
+        RAISE NOTICE 'ERROR: Null or empty values found on laalacescasesactions_20241203 table';
     END IF;
 
-    -- Check marston.laalacesexperianentries_20241018
-    RAISE NOTICE 'Checks for laalacesexperianentries_20241018 table has started';
+    -- Check marston.laalacesexperianentries_20241203
+    RAISE NOTICE 'Checks for laalacesexperianentries_20241203 table has started';
     EXECUTE '
         SELECT EXISTS (
-            SELECT 1 FROM marston.laalacesexperianentries_20241018
+            SELECT 1 FROM marston.laalacesexperianentries_20241203
             WHERE 
                 json_footer IS NULL AND (
                     recordid IS NULL OR recordid = ''NULL'' OR length(recordid) = 0 OR
@@ -556,14 +556,14 @@ BEGIN
     ' INTO v_exists;
 
     IF v_exists THEN
-        RAISE NOTICE 'ERROR: Null or empty values found on laalacesexperianentries_20241018 table';
+        RAISE NOTICE 'ERROR: Null or empty values found on laalacesexperianentries_20241203 table';
     END IF;
 
-    -- Check marston.laalacesexperianmortgageentries_20241018
-    RAISE NOTICE 'Checks for laalacesexperianmortgageentries_20241018 table has started';
+    -- Check marston.laalacesexperianmortgageentries_20241203
+    RAISE NOTICE 'Checks for laalacesexperianmortgageentries_20241203 table has started';
     EXECUTE '
         SELECT EXISTS (
-            SELECT 1 FROM marston.laalacesexperianmortgageentries_20241018
+            SELECT 1 FROM marston.laalacesexperianmortgageentries_20241203
             WHERE 
                 json_footer IS NULL AND (
                     recordid IS NULL OR recordid = ''NULL'' OR length(recordid) = 0 OR
@@ -574,14 +574,14 @@ BEGIN
     ' INTO v_exists;
 
     IF v_exists THEN
-        RAISE NOTICE 'ERROR: Null or empty values found on laalacesexperianmortgageentries_20241018 table';
+        RAISE NOTICE 'ERROR: Null or empty values found on laalacesexperianmortgageentries_20241203 table';
     END IF;
 
-    -- Check marston.laalacesexperianassociations_20241018
-    RAISE NOTICE 'Checks for laalacesexperianassociations_20241018 table has started';
+    -- Check marston.laalacesexperianassociations_20241203
+    RAISE NOTICE 'Checks for laalacesexperianassociations_20241203 table has started';
     EXECUTE '
         SELECT EXISTS (
-            SELECT 1 FROM marston.laalacesexperianassociations_20241018
+            SELECT 1 FROM marston.laalacesexperianassociations_20241203
             WHERE 
                 json_footer IS NULL AND (
                     experianassociationsrecordid IS NULL OR experianassociationsrecordid = ''NULL'' OR length(experianassociationsrecordid) = 0 OR
@@ -592,14 +592,14 @@ BEGIN
     ' INTO v_exists;
 
     IF v_exists THEN
-        RAISE NOTICE 'ERROR: Null or empty values found on laalacesexperianassociations_20241018 table';
+        RAISE NOTICE 'ERROR: Null or empty values found on laalacesexperianassociations_20241203 table';
     END IF;
 
-    -- Check marston.laalacesproperties_20241018
-    RAISE NOTICE 'Checks for laalacesproperties_20241018 table has started';
+    -- Check marston.laalacesproperties_20241203
+    RAISE NOTICE 'Checks for laalacesproperties_20241203 table has started';
     EXECUTE '
         SELECT EXISTS (
-            SELECT 1 FROM marston.laalacesproperties_20241018
+            SELECT 1 FROM marston.laalacesproperties_20241203
             WHERE 
                 json_footer IS NULL AND (
                     recordid IS NULL OR 
@@ -609,14 +609,14 @@ BEGIN
     ' INTO v_exists;
 
     IF v_exists THEN
-        RAISE NOTICE 'ERROR: Null or empty values found on laalacesproperties_20241018 table';
+        RAISE NOTICE 'ERROR: Null or empty values found on laalacesproperties_20241203 table';
     END IF;
 
-    -- Check marston.laalaceslandregistryentries_20241018
-    RAISE NOTICE 'Checks for laalaceslandregistryentries_20241018 table has started';
+    -- Check marston.laalaceslandregistryentries_20241203
+    RAISE NOTICE 'Checks for laalaceslandregistryentries_20241203 table has started';
     EXECUTE '
         SELECT EXISTS (
-            SELECT 1 FROM marston.laalaceslandregistryentries_20241018
+            SELECT 1 FROM marston.laalaceslandregistryentries_20241203
             WHERE 
                 json_footer IS NULL AND (
                     recordid IS NULL OR
@@ -627,14 +627,14 @@ BEGIN
     ' INTO v_exists;
 
     IF v_exists THEN
-        RAISE NOTICE 'ERROR: Null or empty values found on laalaceslandregistryentries_20241018 table';
+        RAISE NOTICE 'ERROR: Null or empty values found on laalaceslandregistryentries_20241203 table';
     END IF;
 
-    -- Check marston.laalaceslandregistryassociations_20241018
-    RAISE NOTICE 'Checks for laalaceslandregistryassociations_20241018 table has started';
+    -- Check marston.laalaceslandregistryassociations_20241203
+    RAISE NOTICE 'Checks for laalaceslandregistryassociations_20241203 table has started';
     EXECUTE '
         SELECT EXISTS (
-            SELECT 1 FROM marston.laalaceslandregistryassociations_20241018
+            SELECT 1 FROM marston.laalaceslandregistryassociations_20241203
             WHERE 
                 json_footer IS NULL AND (
                     recordid IS NULL 
@@ -643,14 +643,14 @@ BEGIN
     ' INTO v_exists;
 
     IF v_exists THEN
-        RAISE NOTICE 'ERROR: Null or empty values found on laalaceslandregistryassociations_20241018 table';
+        RAISE NOTICE 'ERROR: Null or empty values found on laalaceslandregistryassociations_20241203 table';
     END IF;
 
-    -- Check marston.laacasecalllog_20241018
-    RAISE NOTICE 'Checks for laacasecalllog_20241018 table has started';
+    -- Check marston.laacasecalllog_20241203
+    RAISE NOTICE 'Checks for laacasecalllog_20241203 table has started';
     EXECUTE '
         SELECT EXISTS (
-            SELECT 1 FROM marston.laacasecalllog_20241018
+            SELECT 1 FROM marston.laacasecalllog_20241203
             WHERE 
                 json_footer IS NULL AND (
                     caseid IS NULL OR caseid = ''NULL'' OR length(caseid) = 0 OR
@@ -664,14 +664,14 @@ BEGIN
     ' INTO v_exists;
 
     IF v_exists THEN
-        RAISE NOTICE 'ERROR: Null or empty values found on laacasecalllog_20241018 table';
+        RAISE NOTICE 'ERROR: Null or empty values found on laacasecalllog_20241203 table';
     END IF;
 
-    -- Check marston.laacasebalance_20241018
-    RAISE NOTICE 'Checks for laacasebalance_20241018 table has started';
+    -- Check marston.laacasebalance_20241203
+    RAISE NOTICE 'Checks for laacasebalance_20241203 table has started';
     EXECUTE '
         SELECT EXISTS (
-            SELECT 1 FROM marston.laacasebalance_20241018
+            SELECT 1 FROM marston.laacasebalance_20241203
             WHERE 
                 json_footer IS NULL AND (
                     caseid IS NULL OR caseid = ''NULL'' OR length(caseid) = 0 OR
@@ -683,14 +683,14 @@ BEGIN
     ' INTO v_exists;
 
     IF v_exists THEN
-        RAISE NOTICE 'ERROR: Null or empty values found on laacasebalance_20241018 table';
+        RAISE NOTICE 'ERROR: Null or empty values found on laacasebalance_20241203 table';
     END IF;
 
-    -- Check marston.laalacesaudit_20241018
-    RAISE NOTICE 'Checks for laalacesaudit_20241018 table has started';
+    -- Check marston.laalacesaudit_20241203
+    RAISE NOTICE 'Checks for laalacesaudit_20241203 table has started';
     EXECUTE '
         SELECT EXISTS (
-            SELECT 1 FROM marston.laalacesaudit_20241018
+            SELECT 1 FROM marston.laalacesaudit_20241203
             WHERE 
                 json_footer IS NULL AND (
                     auditid IS NULL OR auditid = ''NULL'' OR length(auditid) = 0 OR
@@ -702,14 +702,14 @@ BEGIN
     ' INTO v_exists;
 
     IF v_exists THEN
-        RAISE NOTICE 'ERROR: Null or empty values found on laalacesaudit_20241018 table';
+        RAISE NOTICE 'ERROR: Null or empty values found on laalacesaudit_20241203 table';
     END IF;
 
-    -- Check marston.laacaserefunds_20241018
-    RAISE NOTICE 'Checks for laacaserefunds_20241018 table has started';
+    -- Check marston.laacaserefunds_20241203
+    RAISE NOTICE 'Checks for laacaserefunds_20241203 table has started';
     EXECUTE '
         SELECT EXISTS (
-            SELECT 1 FROM marston.laacaserefunds_20241018
+            SELECT 1 FROM marston.laacaserefunds_20241203
             WHERE 
                 json_footer IS NULL AND (
                     caseid IS NULL OR caseid = ''NULL'' OR length(caseid) = 0 OR
@@ -720,14 +720,14 @@ BEGIN
     ' INTO v_exists;
 
     IF v_exists THEN
-        RAISE NOTICE 'ERROR: Null or empty values found on laacaserefunds_20241018 table';
+        RAISE NOTICE 'ERROR: Null or empty values found on laacaserefunds_20241203 table';
     END IF;
 
-    -- Check marston.laadefaulterswelfare_20241018
-    RAISE NOTICE 'Checks for laadefaulterswelfare_20241018 table has started';
+    -- Check marston.laadefaulterswelfare_20241203
+    RAISE NOTICE 'Checks for laadefaulterswelfare_20241203 table has started';
     EXECUTE '
         SELECT EXISTS (
-            SELECT 1 FROM marston.laadefaulterswelfare_20241018
+            SELECT 1 FROM marston.laadefaulterswelfare_20241203
             WHERE 
                 json_footer IS NULL AND (
                     caseid IS NULL OR caseid = ''NULL'' OR length(caseid) = 0 OR
@@ -739,13 +739,13 @@ BEGIN
     ' INTO v_exists;
 
     IF v_exists THEN
-        RAISE NOTICE 'ERROR: Null or empty values found on laadefaulterswelfare_20241018 table';
+        RAISE NOTICE 'ERROR: Null or empty values found on laadefaulterswelfare_20241203 table';
     END IF;
 
-	RAISE NOTICE 'Checks for laacasestatus_20241018 table has started';
+	RAISE NOTICE 'Checks for laacasestatus_20241203 table has started';
     EXECUTE '
         SELECT EXISTS (
-            SELECT 1 FROM marston.laacasestatus_20241018
+            SELECT 1 FROM marston.laacasestatus_20241203
             WHERE 
                 json_footer IS NULL AND (
                     caseid IS NULL OR caseid = ''NULL'' OR length(caseid) = 0 OR
@@ -759,15 +759,35 @@ BEGIN
     ' INTO v_exists;
 
     IF v_exists THEN
-        RAISE NOTICE 'ERROR: Null or empty values found on laacasestatus_20241018 table';
+        RAISE NOTICE 'ERROR: Null or empty values found on laacasestatus_20241203 table';
     END IF;
 
+	-- Check marston.laacaseassets
+	RAISE NOTICE 'Checks for laacaseassets table has started';
+	EXECUTE '
+	    SELECT EXISTS (
+	        SELECT 1 FROM marston.laacaseassets
+	        WHERE 
+   	            json_footer is null AND (
+				caseid IS NULL OR caseid = ''NULL'' OR length(caseid) = 0 OR
+	            casenumber IS NULL OR casenumber = ''NULL'' OR length(casenumber) = 0 OR
+	            casenotesrecordid IS NULL OR casenotesrecordid = ''NULL'' OR length(casenotesrecordid) = 0 OR
+	            loadedon IS NULL OR
+	            loadedby IS NULL OR loadedby = ''NULL'' OR length(loadedby) = 0
+				)
+		)
+	' INTO v_exists;
+	
+	IF v_exists THEN
+	    RAISE NOTICE 'ERROR: Null or empty values found on laacaseassets table';
+	END IF;
 
-    -- Check marston.laacaseworkflow_20241018
-    RAISE NOTICE 'Checks for laacaseworkflow_20241018 table has started';
+
+    -- Check marston.laacaseworkflow_20241203
+    RAISE NOTICE 'Checks for laacaseworkflow_20241203 table has started';
     EXECUTE '
         SELECT EXISTS (
-            SELECT 1 FROM marston.laacaseworkflow_20241018
+            SELECT 1 FROM marston.laacaseworkflow_20241203
             WHERE 
                 json_footer IS NULL AND (
                     caseid IS NULL OR caseid = ''NULL'' OR length(caseid) = 0 OR
@@ -779,7 +799,7 @@ BEGIN
     ' INTO v_exists;
 
     IF v_exists THEN
-        RAISE NOTICE 'ERROR: Null or empty values found on laacaseworkflow_20241018 table';
+        RAISE NOTICE 'ERROR: Null or empty values found on laacaseworkflow_20241203 table';
     END IF;
 
     RAISE NOTICE 'All specified tables have been checked.';
