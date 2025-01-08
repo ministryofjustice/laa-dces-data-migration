@@ -1,4 +1,9 @@
 BEGIN
+    PERFORM 1 FROM pg_tables WHERE schemaname = 'marston' AND tablename = 'laceskeenrichment';
+    IF FOUND THEN
+        EXECUTE 'TRUNCATE TABLE marston.laceskeenrichment';
+    END IF;
+
     CREATE TABLE IF NOT EXISTS marston.laceskeenrichment (
         lacescaseid TEXT,
         maatid TEXT,
@@ -9,13 +14,12 @@ BEGIN
         totalke_minus_30000 NUMERIC(10, 2)
     );
     
-
-WITH mortgage_entries AS (
+    WITH mortgage_entries AS (
         SELECT 
             propertyid,
             SUM(CAST(NULLIF(mortgage, 'NULL') AS float)) AS total_mortgage
         FROM 
-            marston.laalacesexperianmortgageentries_20241018
+            marston.laalacesexperianmortgageentries_20250106
         GROUP BY 
             propertyid
     ),
@@ -49,7 +53,7 @@ WITH mortgage_entries AS (
                             ELSE COALESCE(CAST(NULLIF(a.percentageownedpartner, 'NULL') AS numeric), 0) END)
                 ) / 100) FILTER (WHERE a.ismainproperty = '0') AS equityinadditionalproperties
         FROM 
-            marston.laalacesproperties_20241018 a
+            marston.laalacesproperties_20250106 a
         LEFT JOIN 
             mortgage_entries m
             ON m.propertyid = CAST(a.recordid AS text)
@@ -59,7 +63,6 @@ WITH mortgage_entries AS (
             a.lacescaseid
     )
     
-
     INSERT INTO marston.laceskeenrichment
     SELECT 
         p.lacescaseid,
@@ -86,7 +89,7 @@ WITH mortgage_entries AS (
     FROM 
         property_equity p
     INNER JOIN 
-        marston.laalacesdatawarehouse_20241018 b 
+        marston.laalacesdatawarehouse_20250106 b 
         ON b.lacescaseid = p.lacescaseid
     ORDER BY 
         p.lacescaseid;
