@@ -25,7 +25,9 @@ BEGIN
         SELECT 
             caseid,
             regexp_match(comment, 'Cap amt:\s*([^;]+);', 'i') AS cap_amt_array
-        FROM marston.laacasenotes_20241203
+
+        FROM marston.laacasenotes_20250106
+
         WHERE comment ILIKE '%Cap amt%'
     ),
     processed_cap_amounts AS (
@@ -50,7 +52,9 @@ BEGIN
         SELECT DISTINCT ON (nt.caseid)
             nt.caseid,
             regexp_match(nt.comment, '(?i)duplicated?[^0-9]*([-+]?\d{1,}(?:,\d{3})*(?:\.\d+)?)') AS mca_array
-        FROM marston.laacasenotes_20241203 nt
+
+        FROM marston.laacasenotes_20250106 nt
+
         WHERE nt.comment ILIKE '%DUPLICATE%' AND (nt.comment ILIKE '%CAP%' OR nt.comment ILIKE '%ACC%' OR nt.comment ILIKE '%AMOUNT%')
         ORDER BY nt.caseid, nt.loadedon DESC
     ),
@@ -91,9 +95,11 @@ BEGIN
             WHEN la.totalavailablecapitalassets IS NULL THEN 'not in laces'
             ELSE 'Y'
         END AS potentialduplicationflag
-    FROM marston.laacasedetails_20241203 b 
-    JOIN marston.laalacesdatawarehouse_20241203 la ON la.maatid = b.clientcasereference
-    JOIN marston.laalacescases_20241203 lc ON lc.lacescaseid = la.lacescaseid
+
+    FROM marston.laacasedetails_20250106 b 
+    JOIN marston.laalacesdatawarehouse_20250106 la ON la.maatid = b.clientcasereference
+    JOIN marston.laalacescases_20250106 lc ON lc.lacescaseid = la.lacescaseid
+
     LEFT JOIN aggregated_cap_amounts aca ON b.caseid = aca.caseid
     LEFT JOIN processed_mca pmca ON pmca.caseid = aca.caseid
     LEFT JOIN marston.referencedata r ON lc.casestatus = r.code
