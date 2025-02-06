@@ -52,10 +52,12 @@ BEGIN
     cap_amounts AS (
         SELECT 
             caseid,
+
             regexp_match(comment, 'Cap amt:\s*([^\;]+);', 'i') AS cap_amt_array
         FROM marston.laacasenotes_20250106
         WHERE 
             comment ILIKE '%Cap amt%'
+
     ),
     processed_cap_amounts AS (
         SELECT
@@ -112,7 +114,9 @@ BEGIN
             nt.caseid,
             regexp_match(nt.comment, '(?i)duplicated?[^0-9]*([-+]?\d{1,}(?:,\d{3})*(?:\.\d+)?)') AS mca_array
         FROM marston.laacasenotes_20250106 nt
+
         WHERE nt.comment ILIKE '%DUPLICATE%' and (nt.comment ILIKE '%CAP%' OR nt.comment ILIKE '%ACC%' OR nt.comment ILIKE '%AMOUNT%')
+
         ORDER BY nt.caseid, nt.loadedon DESC
     ),
     processed_mca AS (
