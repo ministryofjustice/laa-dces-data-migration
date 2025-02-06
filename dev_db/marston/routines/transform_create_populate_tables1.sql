@@ -292,4 +292,5 @@ SET clientdefaulterreference = (SELECT applid FROM marston.maat_applicantid m
 WHERE m.maatid = a.clientcasereference)
 WHERE (clientdefaulterreference = 'NULL' OR clientdefaulterreference =''
 OR clientdefaulterreference is null);
+
 END;
