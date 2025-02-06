@@ -19,7 +19,9 @@ BEGIN
             propertyid,
             SUM(CAST(NULLIF(mortgage, 'NULL') AS float)) AS total_mortgage
         FROM 
+
             marston.laalacesexperianmortgageentries_20250106
+
         GROUP BY 
             propertyid
     ),
@@ -53,7 +55,9 @@ BEGIN
                             ELSE COALESCE(CAST(NULLIF(a.percentageownedpartner, 'NULL') AS numeric), 0) END)
                 ) / 100) FILTER (WHERE a.ismainproperty = '0') AS equityinadditionalproperties
         FROM 
+
             marston.laalacesproperties_20250106 a
+
         LEFT JOIN 
             mortgage_entries m
             ON m.propertyid = CAST(a.recordid AS text)
@@ -89,7 +93,9 @@ BEGIN
     FROM 
         property_equity p
     INNER JOIN 
+
         marston.laalacesdatawarehouse_20250106 b 
+
         ON b.lacescaseid = p.lacescaseid
     ORDER BY 
         p.lacescaseid;
