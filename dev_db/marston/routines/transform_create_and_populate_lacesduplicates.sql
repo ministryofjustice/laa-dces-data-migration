@@ -1,5 +1,10 @@
-
 BEGIN
+    -- Truncate tables if they exist
+    PERFORM 1 FROM pg_tables WHERE schemaname = 'marston' AND tablename = 'lacesduplicates';
+    IF FOUND THEN
+        EXECUTE 'TRUNCATE TABLE marston.lacesduplicates';
+    END IF;
+
     -- Create the lacesduplicates table
     CREATE TABLE IF NOT EXISTS marston.lacesduplicates (
         caseid TEXT,
@@ -7,7 +12,7 @@ BEGIN
         originaltotalcapitalassetsamount NUMERIC,
         LACEStotalavailablecapitalassets NUMERIC,
         amountsequal BOOLEAN,
-        manualcaptalassetsamount NUMERIC,
+        manualcapitalassetsamount NUMERIC,
         manualcapitalassetamountreliableflag CHAR(1),
         originalnumberofcapitalassets INTEGER,
         lacesnumberofcapitalassets INTEGER,
@@ -20,7 +25,9 @@ BEGIN
         SELECT 
             caseid,
             regexp_match(comment, 'Cap amt:\s*([^;]+);', 'i') AS cap_amt_array
-        FROM marston.laacasenotes_20240916
+
+        FROM marston.laacasenotes_20250106
+
         WHERE comment ILIKE '%Cap amt%'
     ),
     processed_cap_amounts AS (
@@ -45,7 +52,9 @@ BEGIN
         SELECT DISTINCT ON (nt.caseid)
             nt.caseid,
             regexp_match(nt.comment, '(?i)duplicated?[^0-9]*([-+]?\d{1,}(?:,\d{3})*(?:\.\d+)?)') AS mca_array
-        FROM marston.laacasenotes_20240916 nt
+
+        FROM marston.laacasenotes_20250106 nt
+
         WHERE nt.comment ILIKE '%DUPLICATE%' AND (nt.comment ILIKE '%CAP%' OR nt.comment ILIKE '%ACC%' OR nt.comment ILIKE '%AMOUNT%')
         ORDER BY nt.caseid, nt.loadedon DESC
     ),
@@ -59,7 +68,7 @@ BEGIN
             END AS ManuallyCorrectedAmount
         FROM manually_corrected_amounts
     )
-    INSERT INTO marston.lacesduplicates (caseid, maatid, originaltotalcapitalassetsamount, LACEStotalavailablecapitalassets, amountsequal, manualcaptalassetsamount, manualcapitalassetamountreliableflag, originalnumberofcapitalassets, lacesnumberofcapitalassets, accountsequal, potentialduplicationflag)
+    INSERT INTO marston.lacesduplicates (caseid, maatid, originaltotalcapitalassetsamount, LACEStotalavailablecapitalassets, amountsequal, manualcapitalassetsamount, manualcapitalassetamountreliableflag, originalnumberofcapitalassets, lacesnumberofcapitalassets, accountsequal, potentialduplicationflag)
     SELECT 
         b.caseid,  
         b.clientcasereference AS maatid,
@@ -70,7 +79,7 @@ BEGIN
             WHEN la.totalavailablecapitalassets = 'NULL' AND (aca.caseid IS NULL OR aca.total_cap_amt = 0) THEN true
             ELSE false
         END AS amountsequal,
-        pmca.ManuallyCorrectedAmount AS manualcaptalassetsamount,
+        pmca.ManuallyCorrectedAmount AS manualcapitalassetsamount,
         CASE
             WHEN pmca.ManuallyCorrectedAmount IS NULL THEN NULL
             WHEN pmca.ManuallyCorrectedAmount IS NOT NULL AND (pmca.ManuallyCorrectedAmount <> aca.total_cap_amt AND pmca.ManuallyCorrectedAmount <> CAST(NULLIF(la.totalavailablecapitalassets, 'NULL') AS numeric)) AND la.maatid IS NOT NULL THEN 'N'
@@ -86,9 +95,11 @@ BEGIN
             WHEN la.totalavailablecapitalassets IS NULL THEN 'not in laces'
             ELSE 'Y'
         END AS potentialduplicationflag
-    FROM marston.laacasedetails_20240916 b 
-    JOIN marston.laalacesdatawarehouse_20240916 la ON la.maatid = b.clientcasereference
-    JOIN marston.laalacescases_20240916 lc ON lc.lacescaseid = la.lacescaseid
+
+    FROM marston.laacasedetails_20250106 b 
+    JOIN marston.laalacesdatawarehouse_20250106 la ON la.maatid = b.clientcasereference
+    JOIN marston.laalacescases_20250106 lc ON lc.lacescaseid = la.lacescaseid
+
     LEFT JOIN aggregated_cap_amounts aca ON b.caseid = aca.caseid
     LEFT JOIN processed_mca pmca ON pmca.caseid = aca.caseid
     LEFT JOIN marston.referencedata r ON lc.casestatus = r.code

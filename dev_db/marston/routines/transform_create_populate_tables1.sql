@@ -1,4 +1,3 @@
-
 DECLARE
     source_table_name TEXT;
     target_table_name TEXT;
@@ -16,41 +15,47 @@ BEGIN
     -- Loop through the list of target tables and perform operations
     FOR target_table_name, join_key IN
         SELECT unnest(ARRAY[
-            'maat_outcomesodfdc','maat_defendantdetails','lacesduplicates','laceskeenrichment'
-			,'LAACases', 'LAACaseDetails', 'LAADefaulters'
+            'maat_outcomesodfdc'--,'maat_defendantdetails'
+            ,'lacesduplicates','laceskeenrichment'
+            ,'LAACases', 'LAACaseDetails', 'LAADefaulters'
             , 'LAADefaultersPhones', 'LAADefaultersEMails','LAADefaultersContactAddresses'
-			, 'LAADefaultersPhonesAudit', 'LAADefaultersEMailsAudit','LAADefaultersContactAddressesAudit'
-			, 'LAACaseCharges'
-			, --10 
-			'LAACasePayments', 'LAACaseAssignments','LAACaseHolds', 
-			'LAACaseArrangements', 'LAACaseVisits', 'LAACaseAdditionalData'
+            , 'LAADefaultersPhonesAudit', 'LAADefaultersEMailsAudit','LAADefaultersContactAddressesAudit'
+            , 'LAACaseCharges'
+            , --10 
+            'LAACasePayments', 'LAACaseAssignments','LAACaseHolds', 
+            'LAACaseArrangements', 'LAACaseVisits', 'LAACaseAdditionalData'
             ,'LAACaseAttachments','LAACaseLinks','LAACaseCallLog',
             -- , 'LAAClientPaymentRuns', 'LAAClientInvoiceRuns', DB: Exclude from migration
             'LAACaseBalance',
-			-- 20
+            -- 20
             'LAACaseRefunds', 'LAADefaultersWelfare', 'LAACaseStatus'
-            ,'LAACaseNotes', 'LAACaseHistory' ,'LAALACESCases', 
-			'LAALACESDatawarehouse',
+
+            ,'LAACaseNotes', 'LAACaseHistory' ,			
+			'LAACaseWorkflow','LAACaseAssets' -- 27
+			,'LAALACESCases', 
+            'LAALACESDatawarehouse',
             -- 'LAALACESAssignments', -- Internal to Marston information, not required by Advantis 
-			'LAALACESCasesActions', 'LAALACESExperianEntries', 'LAALACESProperties'
+            'LAALACESCasesActions', 'LAALACESExperianEntries', 'LAALACESProperties'
             ,'LAALACESExperianMortgageEntries', 'LAALACESExperianAssociations', 'LAALACESLandRegistryEntries', 'LAALACESLandRegistryAssociations'
-            ,'LAALACESAudit'
+            ,'LAALACESAudit', 'LAACaseWorkflow'
         ]),
         unnest(ARRAY[
-            'maatid','maatid', 'caseid','lacescaseid'
-			,'caseid', 'caseid', 'caseid' 
+            'maatid'--,'maatid'
+            , 'caseid','lacescaseid'
+            ,'caseid', 'caseid', 'caseid' 
             ,'caseid', 'caseid', 'caseid', 
-			'caseid', 'caseid', 'caseid',
+            'caseid', 'caseid', 'caseid',
             'caseid', --10
-			'caseid', 'caseid', 'caseid', 
-			'caseid', 'caseid', 'caseid'
+            'caseid', 'caseid', 'caseid', 
+            'caseid', 'caseid', 'caseid'
             , 'caseid', 'caseid', 'caseid'--, 'caseid','caseid', 'caseid', 
             , 'caseid', --20
-			'caseid', 'caseid', 'caseid'
-            ,'caseid', 'caseid' --25
+            'caseid', 'caseid', 'caseid'
+            ,'caseid', 'caseid', 			
+			'caseid', 'caseid' --27
             ,'lacescaseid', 'lacescaseid', 'lacescaseid', 'lacescaseid', 'lacescaseid', 'lacescaseid'
           --  ,'experianentryid', 'ExperianEntriesRecordID', 'propertyid', 'landregistryentryid' -- 26/11/2024: AC - to fix issue on DCES-619
-            
+            , 'caseid'
         ])
     LOOP
         -- Construct table names without quotes
@@ -65,7 +70,7 @@ BEGIN
         IF EXISTS (SELECT 1 FROM information_schema.tables 
                   WHERE table_schema = source_schema 
                   AND (table_name = source_table_name
-				  OR table_name = target_table_name)) THEN
+                  OR table_name = target_table_name)) THEN
             -- Drop target table if it exists
             EXECUTE format('DROP TABLE IF EXISTS %I.%I', target_schema, lower(target_table_name));
             
@@ -178,98 +183,98 @@ BEGIN
                     source_table_name
                 );
             
-			ELSIF target_table_name = 'maat_outcomesodfdc' THEN
+            ELSIF target_table_name = 'maat_outcomesodfdc' THEN
                 EXECUTE format(
                     'CREATE TABLE %I.%I AS 
                      SELECT src.*
                      FROM %I.%I src
-					  WHERE EXISTS (
-				         SELECT 1 
-				         FROM %I.MigrationScope ms 
-				         WHERE cast(src.%I as text) = 
-						 cast(ms.%I as text) AND ms.%I IS NOT NULL
-				     )',                    
-					target_schema,
+                      WHERE EXISTS (
+                         SELECT 1 
+                         FROM %I.MigrationScope ms 
+                         WHERE cast(src.%I as text) = 
+                         cast(ms.%I as text) AND ms.%I IS NOT NULL
+                     )',                    
+                    target_schema,
                     lower(target_table_name),
                     source_schema,
                     target_table_name,
                     source_schema,
-					join_key, join_key, join_key
+                    join_key, join_key, join_key
                 );
-			ELSIF target_table_name = 'maat_defendantdetails' THEN
+            ELSIF target_table_name = 'maat_defendantdetails' THEN
                 EXECUTE format(
                     'CREATE TABLE %I.%I AS 
                      SELECT src.*
                      FROM %I.%I src
-					  WHERE EXISTS (
-				         SELECT 1 
-				         FROM %I.MigrationScope ms 
-				         WHERE cast(src.%I as text) = 
-						 cast(ms.%I as text) AND ms.%I IS NOT NULL
-				     )',                    
-					target_schema,
+                      WHERE EXISTS (
+                         SELECT 1 
+                         FROM %I.MigrationScope ms 
+                         WHERE cast(src.%I as text) = 
+                         cast(ms.%I as text) AND ms.%I IS NOT NULL
+                     )',                    
+                    target_schema,
                     lower(target_table_name),
                     source_schema,
                     target_table_name,
                     source_schema,
-					join_key, join_key, join_key
+                    join_key, join_key, join_key
                 );
-			ELSIF target_table_name = 'lacesduplicates' THEN
+            ELSIF target_table_name = 'lacesduplicates' THEN
                 EXECUTE format(
                     'CREATE TABLE %I.%I AS 
                      SELECT src.*
                      FROM %I.%I src
-					  WHERE EXISTS (
-				         SELECT 1 
-				         FROM %I.MigrationScope ms 
-				         WHERE cast(src.%I as text) = 
-						 cast(ms.%I as text) AND ms.%I IS NOT NULL
-				     )',                    
-					target_schema,
+                      WHERE EXISTS (
+                         SELECT 1 
+                         FROM %I.MigrationScope ms 
+                         WHERE cast(src.%I as text) = 
+                         cast(ms.%I as text) AND ms.%I IS NOT NULL
+                     )',                    
+                    target_schema,
                     lower(target_table_name),
                     source_schema,
                     target_table_name,
                     source_schema,
-					join_key, join_key, join_key
+                    join_key, join_key, join_key
                 );
-			ELSIF target_table_name = 'laceskeenrichment' THEN
+            ELSIF target_table_name = 'laceskeenrichment' THEN
                 EXECUTE format(
                     'CREATE TABLE %I.%I AS 
                      SELECT src.*
                      FROM %I.%I src
-					  WHERE EXISTS (
-				         SELECT 1 
-				         FROM %I.MigrationScope ms 
-				         WHERE cast(src.%I as text) = 
-						 cast(ms.%I as text) AND ms.%I IS NOT NULL
-				     )',                    
-					target_schema,
+                      WHERE EXISTS (
+                         SELECT 1 
+                         FROM %I.MigrationScope ms 
+                         WHERE cast(src.%I as text) = 
+                         cast(ms.%I as text) AND ms.%I IS NOT NULL
+                     )',                    
+                    target_schema,
                     lower(target_table_name),
                     source_schema,
                     target_table_name,
                     source_schema,
-					join_key, join_key, join_key
+                    join_key, join_key, join_key
                 );
-			ELSE
+            ELSE
                 -- Recreate target table and copy data from source table with join condition
-				EXECUTE format(
-				    'CREATE TABLE %I.%I AS 
-				     SELECT src.* 
-				     FROM %I.%I src
-				     WHERE EXISTS (
-				         SELECT 1 
-				         FROM %I.MigrationScope ms 
-				         WHERE src.%I = ms.%I AND ms.%I IS NOT NULL
-				     )',
-				    target_schema,
-				    lower(target_table_name),
-				    source_schema,
-				    source_table_name,
-				    source_schema,
-				    join_key,
-				    join_key,
-				    join_key
-				);
+                EXECUTE format(
+                    'CREATE TABLE %I.%I AS 
+                     SELECT src.* 
+                     FROM %I.%I src
+                     WHERE EXISTS (
+                         SELECT 1 
+                         FROM %I.MigrationScope ms 
+                         WHERE src.%I = ms.%I AND ms.%I IS NOT NULL
+                     )',
+                    target_schema,
+                    lower(target_table_name),
+                    source_schema,
+                    source_table_name,
+                    source_schema,
+                    join_key,
+                    join_key,
+                    join_key
+                );
             END IF;
         ELSE
             RAISE NOTICE 'Source table % does not exist, skipping.', full_source_table_name;
@@ -284,5 +289,22 @@ WHERE clientcasereference = 'A1043EL';
 -- DCES-612 // Removing duplicate and incorrect defendants, hardcoding it as this shoudn't happen again
 DELETE FROM transform.laadefaulters
 WHERE defaulterid IN ('13184712', '13203526', '13240529');
+
+-- DCES-632 // Populating missing clientdefaulterreference value from maat's extract
+UPDATE transform.laacasedetails a
+SET clientdefaulterreference = (SELECT applid FROM marston.maat_applicantid m
+WHERE m.maatid = a.clientcasereference)
+WHERE (clientdefaulterreference = 'NULL' OR clientdefaulterreference =''
+OR clientdefaulterreference is null);
+
+-- DCES-684 // Update Defaulted ID for one case while extracing data to Advantis
+UPDATE laacasedetails 
+SET clientdefaulterreference = '366336662'
+WHERE clientdefaulterreference = '62FA0060420';
+
+-- DCES-685 // Remove commas from capamt field in transform.laacaseassets table
+UPDATE transform.laacaseassets
+SET capamt = REPLACE(capamt, ',', '')
+WHERE capamt LIKE '%,%';
 
 END;
