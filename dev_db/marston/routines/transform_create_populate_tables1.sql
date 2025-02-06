@@ -29,6 +29,7 @@ BEGIN
             'LAACaseBalance',
             -- 20
             'LAACaseRefunds', 'LAADefaultersWelfare', 'LAACaseStatus'
+
             ,'LAACaseNotes', 'LAACaseHistory' ,			
 			'LAACaseWorkflow','LAACaseAssets' -- 27
 			,'LAALACESCases', 
@@ -36,10 +37,10 @@ BEGIN
             -- 'LAALACESAssignments', -- Internal to Marston information, not required by Advantis 
             'LAALACESCasesActions', 'LAALACESExperianEntries', 'LAALACESProperties'
             ,'LAALACESExperianMortgageEntries', 'LAALACESExperianAssociations', 'LAALACESLandRegistryEntries', 'LAALACESLandRegistryAssociations'
-            ,'LAALACESAudit'
+            ,'LAALACESAudit', 'LAACaseWorkflow'
         ]),
-        unnest(ARRAY[            
-			'maatid'--,'maatid'
+        unnest(ARRAY[
+            'maatid'--,'maatid'
             , 'caseid','lacescaseid'
             ,'caseid', 'caseid', 'caseid' 
             ,'caseid', 'caseid', 'caseid', 
@@ -54,7 +55,7 @@ BEGIN
 			'caseid', 'caseid' --27
             ,'lacescaseid', 'lacescaseid', 'lacescaseid', 'lacescaseid', 'lacescaseid', 'lacescaseid'
           --  ,'experianentryid', 'ExperianEntriesRecordID', 'propertyid', 'landregistryentryid' -- 26/11/2024: AC - to fix issue on DCES-619
-            
+            , 'caseid'
         ])
     LOOP
         -- Construct table names without quotes
@@ -305,4 +306,5 @@ WHERE clientdefaulterreference = '62FA0060420';
 UPDATE transform.laacaseassets
 SET capamt = REPLACE(capamt, ',', '')
 WHERE capamt LIKE '%,%';
+
 END;
