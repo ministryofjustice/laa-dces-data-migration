@@ -29,7 +29,10 @@ BEGIN
             'LAACaseBalance',
             -- 20
             'LAACaseRefunds', 'LAADefaultersWelfare', 'LAACaseStatus'
-            ,'LAACaseNotes', 'LAACaseHistory' ,'LAALACESCases', 
+
+            ,'LAACaseNotes', 'LAACaseHistory' ,			
+			'LAACaseWorkflow','LAACaseAssets' -- 27
+			,'LAALACESCases', 
             'LAALACESDatawarehouse',
             -- 'LAALACESAssignments', -- Internal to Marston information, not required by Advantis 
             'LAALACESCasesActions', 'LAALACESExperianEntries', 'LAALACESProperties'
@@ -48,7 +51,8 @@ BEGIN
             , 'caseid', 'caseid', 'caseid'--, 'caseid','caseid', 'caseid', 
             , 'caseid', --20
             'caseid', 'caseid', 'caseid'
-            ,'caseid', 'caseid' --25
+            ,'caseid', 'caseid', 			
+			'caseid', 'caseid' --27
             ,'lacescaseid', 'lacescaseid', 'lacescaseid', 'lacescaseid', 'lacescaseid', 'lacescaseid'
           --  ,'experianentryid', 'ExperianEntriesRecordID', 'propertyid', 'landregistryentryid' -- 26/11/2024: AC - to fix issue on DCES-619
             , 'caseid'
@@ -292,5 +296,15 @@ SET clientdefaulterreference = (SELECT applid FROM marston.maat_applicantid m
 WHERE m.maatid = a.clientcasereference)
 WHERE (clientdefaulterreference = 'NULL' OR clientdefaulterreference =''
 OR clientdefaulterreference is null);
+
+-- DCES-684 // Update Defaulted ID for one case while extracing data to Advantis
+UPDATE laacasedetails 
+SET clientdefaulterreference = '366336662'
+WHERE clientdefaulterreference = '62FA0060420';
+
+-- DCES-685 // Remove commas from capamt field in transform.laacaseassets table
+UPDATE transform.laacaseassets
+SET capamt = REPLACE(capamt, ',', '')
+WHERE capamt LIKE '%,%';
 
 END;
